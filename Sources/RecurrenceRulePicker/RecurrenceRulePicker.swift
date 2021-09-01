@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-enum DisplayMode {
-    case daily
-    case week
-    case month
-    case year
-}
-
 enum WeekNumberIndex: Int, CaseIterable {
     case first = 1
     case second = 2
@@ -105,7 +98,7 @@ public struct RecurrenceRulePicker: View {
                         Text(LocalizedStringKey(recurrenceRule.frequency.rawValue), bundle: .module)
                             .foregroundColor(.secondary)
                     }
-
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
 
@@ -137,6 +130,7 @@ public struct RecurrenceRulePicker: View {
                         Text(LocalizedStringKey("\(recurrenceRule.interval) \(recurrenceRule.frequency.text)"), bundle: .module)
                             .foregroundColor(.secondary)
                     }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
 
