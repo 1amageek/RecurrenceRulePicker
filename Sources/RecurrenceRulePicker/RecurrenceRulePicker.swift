@@ -76,6 +76,27 @@ public struct RecurrenceRulePicker: View {
 
     public init(_ recurrenceRule: Binding<RecurrenceRule>) {
         self._recurrenceRule = recurrenceRule
+
+        let rule = recurrenceRule.wrappedValue
+        switch rule.frequency {
+            case .daily: break
+            case .weekly:
+                let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
+                self.daysOfTheWeek = Set(daysOfTheWeek)
+            case .monthly:
+                if let daysOfTheWeek = rule.daysOfTheWeek?.map({ $0.dayOfTheWeek }) {
+                    self.daysOfTheWeek = Set(daysOfTheWeek)
+                } else {
+                    let daysOfTheMonth = rule.daysOfTheMonth ?? []
+                    self.daysOfTheMonth = Set(daysOfTheMonth)
+                }
+            case .yearly:
+                if let daysOfTheWeek = rule.daysOfTheWeek?.map({ $0.dayOfTheWeek }) {
+                    self.daysOfTheWeek = Set(daysOfTheWeek)
+                }
+                let monthsOfTheYear = rule.monthsOfTheYear ?? []
+                self.monthsOfTheYear = Set(monthsOfTheYear)
+        }
     }
 
     @State private var selection: Selection?
@@ -184,6 +205,7 @@ public struct RecurrenceRulePicker: View {
         }
         .onChange(of: daysOfTheMonth) { newValue in
             recurrenceRule.daysOfTheMonth = Array(newValue)
+            recurrenceRule.daysOfTheWeek = nil
         }
         .onChange(of: monthsOfTheYear) { newValue in
             if recurrenceRule.frequency == .yearly {
@@ -192,9 +214,15 @@ public struct RecurrenceRulePicker: View {
         }
         .onChange(of: weekNumber) { newValue in
             recurrenceRule.daysOfTheWeek = weekday.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: newValue.rawValue) }
+            if recurrenceRule.frequency == .monthly {
+                recurrenceRule.daysOfTheMonth = nil
+            }
         }
         .onChange(of: weekday) { newValue in
             recurrenceRule.daysOfTheWeek = newValue.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: weekNumber.rawValue) }
+            if recurrenceRule.frequency == .monthly {
+                recurrenceRule.daysOfTheMonth = nil
+            }
         }
     }
 }
@@ -211,7 +239,7 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
 
     struct ContentView: View {
 
-        @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .weekly, interval: 1, firstDayOfTheWeek: 0, daysOfTheWeek: nil, daysOfTheMonth: nil, daysOfTheYear: nil, monthsOfTheYear: nil)
+        @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .daily, interval: 1, firstDayOfTheWeek: 0, daysOfTheWeek: nil, daysOfTheMonth: nil, daysOfTheYear: nil, monthsOfTheYear: nil)
 
         var body: some View {
             RecurrenceRulePicker($recurrenceRule)
