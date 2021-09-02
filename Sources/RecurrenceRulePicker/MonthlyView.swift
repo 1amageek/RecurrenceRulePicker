@@ -16,9 +16,11 @@ struct MonthlyView: View {
 
     @State var selection: Mode = .day
 
-    @Binding var daySelections: Set<Int>
+    @Binding var daysOfTheMonth: Set<Int>
 
-    @Binding var daysOfTheWeekSelection: [Int]?
+    @Binding var weekNumber: WeekNumberIndex
+
+    @Binding var weekday: WeekdayIndex
 
     var body: some View {
         Button {
@@ -50,24 +52,17 @@ struct MonthlyView: View {
 
         switch selection {
             case .day:
-                DayGrid($daySelections)
+                DayGrid($daysOfTheMonth)
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
 
             case .weekday:
-                MultiPicker(WeekNumberIndex.allCases, WeekdayIndex.allCases, selection: $daysOfTheWeekSelection) { component, row -> Text in
-                    switch component {
-                        case 0:
-                            let weekNumber = WeekNumberIndex.allCases[row]
-                            return Text(LocalizedStringKey(weekNumber.text), bundle: .module)
-                        case 1:
-                            let weekday = WeekdayIndex.allCases[row]
-                            return Text(LocalizedStringKey(weekday.text), bundle: .module)
-                        default: fatalError()
-                    }
-                }
-                .listRowInsets(EdgeInsets())
-
+                MultiPicker(.init(WeekNumberIndex.allCases, selection: $weekNumber, content: { weekNumber in
+                    Text(LocalizedStringKey(weekNumber.text), bundle: .module)
+                }), .init(WeekdayIndex.allCases, selection: $weekday, content: { weekday in
+                    Text(LocalizedStringKey(weekday.text), bundle: .module)
+                }))
+                    .listRowInsets(EdgeInsets())
         }
     }
 }
@@ -76,7 +71,7 @@ struct MonthlyView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             List {
-                MonthlyView(daySelections: .constant([]), daysOfTheWeekSelection: .constant(nil))
+                MonthlyView(daysOfTheMonth: .constant([]), weekNumber: .constant(.first), weekday: .constant(.day))
             }
             .listStyle(GroupedListStyle())
         }

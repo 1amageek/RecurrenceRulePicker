@@ -9,23 +9,23 @@ import SwiftUI
 
 struct WeeklyView: View {
 
-    @Binding var weekdaySelections: Set<RecurrenceRule.Weekday>
+    @Binding var daysOfTheWeek: Set<RecurrenceRule.Weekday>
 
     var body: some View {
         Section {
             ForEach(RecurrenceRule.Weekday.allCases, id: \.self) { weekday in
                 Button {
-                    if weekdaySelections.contains(weekday) {
-                        weekdaySelections.remove(weekday)
+                    if daysOfTheWeek.contains(weekday) {
+                        daysOfTheWeek.remove(weekday)
                     } else {
-                        weekdaySelections.insert(weekday)
+                        daysOfTheWeek.insert(weekday)
                     }
                 } label: {
                     HStack {
                         Text(LocalizedStringKey(weekday.text), bundle: .module)
                         Spacer()
                         Image(systemName: "checkmark")
-                            .opacity(weekdaySelections.contains(weekday) ? 1 : 0)
+                            .opacity(daysOfTheWeek.contains(weekday) ? 1 : 0)
                     }
                     .contentShape(Rectangle())
                 }
@@ -39,7 +39,7 @@ struct WeeklyView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             List {
-                WeeklyView(weekdaySelections: .constant([]))
+                WeeklyView(daysOfTheWeek: .constant([]))
             }
             .listStyle(GroupedListStyle())
         }

@@ -7,20 +7,32 @@
 
 import SwiftUI
 
-struct MultiPicker<D0, D1, Content>: UIViewRepresentable where D0 : RandomAccessCollection, D1 : RandomAccessCollection, Content: View {
+struct PickerComponent<Data, SelectionValue, Content> where Data: RandomAccessCollection, SelectionValue: Hashable, Content: View, Data.Element == SelectionValue {
+
+    var data: Data
+
+    var selection: Binding<SelectionValue>
+
+    var content: (Data.Element) -> Content
+
+    init(_ data: Data, selection: Binding<SelectionValue>, content: @escaping (Data.Element) -> Content) {
+        self.data = data
+        self.selection = selection
+        self.content = content
+    }
+}
+
+struct MultiPicker<D0, D1, S0, S1, C0, C1>: UIViewRepresentable where D0: RandomAccessCollection, D1: RandomAccessCollection, S0: Hashable, S1: Hashable, C0: View, C1: View, D0.Element == S0, D1.Element == S1 {
 
     typealias UIViewType = UIPickerView
 
-    @Binding var selection: [Int]?
+    var c0: PickerComponent<D0, S0, C0>
 
-    var content: (Int, Int) -> Content
+    var c1: PickerComponent<D1, S1, C1>
 
-    var data: (D0, D1)
-
-    init(_ d0: D0, _ d1: D1, selection: Binding<[Int]?>, @ViewBuilder content: @escaping (Int, Int) -> Content) {
-        self.data = (d0, d1)
-        self._selection = selection
-        self.content = content
+    init(_ c0: PickerComponent<D0, S0, C0>, _ c1: PickerComponent<D1, S1, C1>) {
+        self.c0 = c0
+        self.c1 = c1
     }
 
     func makeUIView(context: Context) -> UIPickerView {
@@ -33,9 +45,8 @@ struct MultiPicker<D0, D1, Content>: UIViewRepresentable where D0 : RandomAccess
     }
 
     func updateUIView(_ uiView: UIPickerView, context: Context) {
-        self.selection = (0..<2).map { index in
-            return uiView.selectedRow(inComponent: index)
-        }
+        self.c0.selection.wrappedValue = Array(self.c0.data)[uiView.selectedRow(inComponent: 0)]
+        self.c1.selection.wrappedValue = Array(self.c1.data)[uiView.selectedRow(inComponent: 1)]
     }
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
@@ -54,44 +65,55 @@ struct MultiPicker<D0, D1, Content>: UIViewRepresentable where D0 : RandomAccess
 
         func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
             switch component {
-                case 0: return parent.data.0.count
-                case 1: return parent.data.1.count
+                case 0: return parent.c0.data.count
+                case 1: return parent.c1.data.count
                 default: fatalError()
             }
         }
 
         func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-            let content = self.parent.content
-            let view = content(component, row)
-            let viewController = UIHostingController(rootView: view)
-            return viewController.view
+            switch component {
+                case 0:
+                    let data = Array(parent.c0.data)[row]
+                    let content = parent.c0.content(data)
+                    let viewController = UIHostingController(rootView: content)
+                    return viewController.view
+                case 1:
+                    let data = Array(parent.c1.data)[row]
+                    let content = parent.c1.content(data)
+                    let viewController = UIHostingController(rootView: content)
+                    return viewController.view
+                default: fatalError()
+            }
         }
 
         func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            self.parent.selection = (0..<2).map { index in
-                return pickerView.selectedRow(inComponent: index)
+            switch component {
+                case 0: parent.c0.selection.wrappedValue = Array(parent.c0.data)[row]
+                case 1: parent.c1.selection.wrappedValue = Array(parent.c1.data)[row]
+                default: fatalError()
             }
         }
     }
-
 }
 
 struct MultiPicker_Previews: PreviewProvider {
 
     struct ContentView: View {
 
-        @State var selection: [Int]?
+        @State var selection0: String = "a"
+
+        @State var selection1: Int = 1
 
         var body: some View {
             VStack {
-                if let selection = selection {
-                    Text("\(selection[0])")
-                    Text("\(selection[1])")
-                }
 
-                MultiPicker(["ww", "w", "aa"], ["aaa"], selection: $selection) { component, row in
-                    Text("\(component), \(row)")
-                }
+                MultiPicker(.init(["a"], selection: .constant(""), content: { value in
+                    Text(value)
+                }), .init((0..<100), selection: $selection1, content: { value in
+                    Text("\(value)")
+                }))
+
             }
         }
 

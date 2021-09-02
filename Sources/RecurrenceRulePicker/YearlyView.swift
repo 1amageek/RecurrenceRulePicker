@@ -15,33 +15,32 @@ struct YearlyView: View {
 
     @State private var daysOfTheWeekToggle: Bool = false
 
-    @Binding var monthSelections: Set<RecurrenceRule.Month>
+    @Binding var monthsOfTheYear: Set<RecurrenceRule.Month>
 
-    @Binding var daysOfTheWeekSelection: [Int]?
+    @Binding var weekNumber: WeekNumberIndex
+
+    @Binding var weekday: WeekdayIndex
 
     var body: some View {
 
         Section {
-            MonthGrid($monthSelections)
+            MonthGrid($monthsOfTheYear)
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
         }
 
-        Toggle(isOn: $daysOfTheWeekToggle) {
-            Text("Days of Week", bundle: .module)
-        }
+        Section {
+            Toggle(isOn: $daysOfTheWeekToggle) {
+                Text("Days of Week", bundle: .module)
+            }
 
-        if daysOfTheWeekToggle {
-            MultiPicker(WeekNumberIndex.allCases, WeekdayIndex.allCases, selection: $daysOfTheWeekSelection) { component, row -> Text in
-                switch component {
-                    case 0:
-                        let weekNumber = WeekNumberIndex.allCases[row]
-                        return Text(LocalizedStringKey(weekNumber.text), bundle: .module)
-                    case 1:
-                        let weekday = WeekdayIndex.allCases[row]
-                        return Text(LocalizedStringKey(weekday.text), bundle: .module)
-                    default: fatalError()
-                }
+            if daysOfTheWeekToggle {
+                MultiPicker(.init(WeekNumberIndex.allCases, selection: $weekNumber, content: { weekNumber in
+                    Text(LocalizedStringKey(weekNumber.text), bundle: .module)
+                }), .init(WeekdayIndex.allCases, selection: $weekday, content: { weekday in
+                    Text(LocalizedStringKey(weekday.text), bundle: .module)
+                }))
+                    .listRowInsets(EdgeInsets())
             }
         }
     }
@@ -51,7 +50,7 @@ struct YearlyView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             List {
-                YearlyView(monthSelections: .constant([]), daysOfTheWeekSelection: .constant(nil))
+                YearlyView(monthsOfTheYear: .constant([]), weekNumber: .constant(.first), weekday: .constant(.day))
             }
             .listStyle(GroupedListStyle())
         }

@@ -28,16 +28,16 @@ enum WeekNumberIndex: Int, CaseIterable {
 }
 
 enum WeekdayIndex: Int, CaseIterable {
-    case sunday
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-    case day
-    case weekday
-    case weekend
+    case sunday = 1
+    case monday = 2
+    case tuesday = 3
+    case wednesday = 4
+    case thursday = 5
+    case friday = 6
+    case saturday = 7
+    case day = 0
+    case weekday = 8
+    case weekend = 9
 
     var text: String {
         switch self {
@@ -51,6 +51,21 @@ enum WeekdayIndex: Int, CaseIterable {
             case .day: return "day"
             case .weekday: return "weekday"
             case .weekend: return "weekend day"
+        }
+    }
+
+    var value: [RecurrenceRule.Weekday] {
+        switch self {
+            case .sunday: return [.sunday]
+            case .monday: return [.monday]
+            case .tuesday: return [.tuesday]
+            case .wednesday: return [.wednesday]
+            case .thursday: return [.thursday]
+            case .friday: return [.friday]
+            case .saturday: return [.saturday]
+            case .day: return [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
+            case .weekday: return [.monday, .tuesday, .wednesday, .thursday, .friday]
+            case .weekend: return [.saturday, .sunday]
         }
     }
 }
@@ -67,16 +82,15 @@ public struct RecurrenceRulePicker: View {
 
     @State private var daysOfTheWeekToggle: Bool = false
 
-    @State private var weekNumber: Int = 0
+    @State private var weekNumber: WeekNumberIndex = .first
 
-    @State private var daysOfTheWeekSelection: [Int]?
+    @State private var weekday: WeekdayIndex = .sunday
 
-    @State private var daySelections: Set<Int> = []
+    @State private var daysOfTheMonth: Set<Int> = []
 
-    @State private var weekdaySelections: Set<RecurrenceRule.Weekday> = []
+    @State private var daysOfTheWeek: Set<RecurrenceRule.Weekday> = []
 
-    @State private var monthSelections: Set<RecurrenceRule.Month> = []
-
+    @State private var monthsOfTheYear: Set<RecurrenceRule.Month> = []
 
     public var body: some View {
         List {
@@ -127,7 +141,7 @@ public struct RecurrenceRulePicker: View {
                     HStack {
                         Text("Every", bundle: .module)
                         Spacer()
-                        Text(LocalizedStringKey("\(recurrenceRule.interval) \(recurrenceRule.frequency.text)"), bundle: .module)
+                        Text(LocalizedStringKey("\(recurrenceRule.interval)\(recurrenceRule.frequency.text)"), bundle: .module)
                             .foregroundColor(.secondary)
                     }
                     .contentShape(Rectangle())
@@ -135,27 +149,53 @@ public struct RecurrenceRulePicker: View {
                 .buttonStyle(PlainButtonStyle())
 
                 if case .interval = selection {
-                    Picker(selection: $recurrenceRule.interval) {
-                        ForEach(1..<1000) { interval in
-                            Text("\(interval)")
-                                .tag(interval)
+
+                    MultiPicker(.init((1..<1000), selection: $recurrenceRule.interval, content: { element in
+                        Text("\(element)")
+                    }), .init(["unit"], selection: .constant("unit"), content: { element in
+                        Group {
+                            if recurrenceRule.interval < 2 {
+                                Text(LocalizedStringKey("\(recurrenceRule.frequency.text)"), bundle: .module)
+                            } else {
+                                Text(LocalizedStringKey("\(recurrenceRule.frequency.text)s"), bundle: .module)
+                            }
                         }
-                    } label: {
-                        Text("Every", bundle: .module)
-                    }
-                    .pickerStyle(WheelPickerStyle())
+                    }))
                 }
             }
 
             switch recurrenceRule.frequency {
                 case .daily: EmptyView()
-                case .weekly: WeeklyView(weekdaySelections: $weekdaySelections)
-                case .monthly: MonthlyView(daySelections: $daySelections, daysOfTheWeekSelection: $daysOfTheWeekSelection)
-                case .yearly: YearlyView(monthSelections: $monthSelections, daysOfTheWeekSelection: $daysOfTheWeekSelection)
+                case .weekly: WeeklyView(daysOfTheWeek: $daysOfTheWeek)
+                case .monthly: MonthlyView(daysOfTheMonth: $daysOfTheMonth, weekNumber: $weekNumber, weekday: $weekday)
+                case .yearly: YearlyView(monthsOfTheYear: $monthsOfTheYear, weekNumber: $weekNumber, weekday: $weekday)
             }
-
         }
         .listStyle(GroupedListStyle())
+        .onChange(of: recurrenceRule.frequency) { newValue in
+            recurrenceRule.daysOfTheWeek = nil
+            recurrenceRule.daysOfTheMonth = nil
+            recurrenceRule.daysOfTheYear = nil
+            recurrenceRule.weeksOfTheYear = nil
+            recurrenceRule.monthsOfTheYear = nil
+        }
+        .onChange(of: daysOfTheWeek) { newValue in
+            recurrenceRule.daysOfTheWeek = newValue.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: 0) }
+        }
+        .onChange(of: daysOfTheMonth) { newValue in
+            recurrenceRule.daysOfTheMonth = Array(newValue)
+        }
+        .onChange(of: monthsOfTheYear) { newValue in
+            if recurrenceRule.frequency == .yearly {
+                recurrenceRule.monthsOfTheYear = Array(newValue)
+            }
+        }
+        .onChange(of: weekNumber) { newValue in
+            recurrenceRule.daysOfTheWeek = weekday.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: newValue.rawValue) }
+        }
+        .onChange(of: weekday) { newValue in
+            recurrenceRule.daysOfTheWeek = newValue.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: weekNumber.rawValue) }
+        }
     }
 }
 

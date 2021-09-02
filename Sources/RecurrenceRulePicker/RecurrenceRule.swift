@@ -26,13 +26,13 @@ public struct RecurrenceRule: Codable {
     }
 
     public enum Weekday: Int, Codable, CaseIterable {
-        case sunday
-        case monday
-        case tuesday
-        case wednesday
-        case thursday
-        case friday
-        case saturday
+        case sunday = 1
+        case monday = 2
+        case tuesday = 3
+        case wednesday = 4
+        case thursday = 5
+        case friday = 6
+        case saturday = 7
 
         var text: String {
             switch self {
@@ -84,7 +84,11 @@ public struct RecurrenceRule: Codable {
         public var weekNumber: Int
         
         public init(dayOfTheWeek: Weekday, weekNumber: Int) {
+
+            /// Values are from 1 to 7, with Sunday being 1.
             self.dayOfTheWeek = dayOfTheWeek
+
+            /// Values range from –53 to 53.
             self.weekNumber = weekNumber
         }
     }
@@ -95,25 +99,39 @@ public struct RecurrenceRule: Codable {
     }
 
     public var frequency: Frequency
+
     public var recurrenceEnd: End?
+
     public var interval: Int
-    public var firstDayOfTheWeek: Int           // 何曜日
+
+    /// Values of 1 to 7 correspond to Sunday through Saturday. A value of 0 indicates that this property is not set for the recurrence rule.
+    public var firstDayOfTheWeek: Int = 0       // 何曜日
+
+    /// This property value is valid only for recurrence rules that were initialized with specific days of the week and a frequency type of Weekly, Monthly, or Yearly.
     public var daysOfTheWeek: [DayOfWeek]?      // 第何週
+
+    /// Values can be from 1 to 31 and from -1 to -31.
     public var daysOfTheMonth: [Int]?           // 月の何日目
+
+    /// Values can be from 1 to 366 and from -1 to -366.
     public var daysOfTheYear: [Int]?            // 年の何日目
+
+    /// Values can be from 1 to 53 and from -1 to -53.
     public var weeksOfTheYear: [Int]?           // 年の何週目
-    public var monthsOfTheYear: [Int]?          // 年の何ヶ月目
+
+    /// Values can be from 1 to 12.
+    public var monthsOfTheYear: [Month]?          // 年の何ヶ月目
 
     public init(
         frequency: Frequency,
         recurrenceEnd: End? = nil,
         interval: Int,
-        firstDayOfTheWeek: Int,
+        firstDayOfTheWeek: Int = 0,
         daysOfTheWeek: [DayOfWeek]? = nil,
         daysOfTheMonth: [Int]? = nil,
         daysOfTheYear: [Int]? = nil,
         weeksOfTheYear: [Int]? = nil,
-        monthsOfTheYear: [Int]? = nil
+        monthsOfTheYear: [Month]? = nil
     ) {
         self.frequency = frequency
         self.recurrenceEnd = recurrenceEnd

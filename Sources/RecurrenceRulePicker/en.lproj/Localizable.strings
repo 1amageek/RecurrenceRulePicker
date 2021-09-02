@@ -2,6 +2,8 @@
 "Every" = "Every";
 
 // Unit
+"week" = "week";
+"weeks" = "weeks";
 "1week" = "1week";
 "%@weeks" = "%@weeks";
 
