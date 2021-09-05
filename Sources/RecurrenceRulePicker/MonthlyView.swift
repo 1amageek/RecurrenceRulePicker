@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PickerGroup
 
 struct MonthlyView: View {
 
@@ -57,11 +58,20 @@ struct MonthlyView: View {
                     .listRowSeparator(.hidden)
 
             case .weekday:
-                MultiPicker(.init(WeekNumberIndex.allCases, selection: $weekNumber, content: { weekNumber in
-                    Text(LocalizedStringKey(weekNumber.text), bundle: .module)
-                }), .init(WeekdayIndex.allCases, selection: $weekday, content: { weekday in
-                    Text(LocalizedStringKey(weekday.text), bundle: .module)
-                }))
+                PickerGroup(content: {
+                    PickerComponent(selection: $weekNumber) {
+                        ForEach(WeekNumberIndex.allCases, id: \.self) { weekNumber in
+                            Text(LocalizedStringKey(weekNumber.text), bundle: .module)
+                        }
+                    }
+                    PickerComponent(selection: $weekday) {
+                        ForEach(WeekdayIndex.allCases, id: \.self) { weekday in
+                            Text(LocalizedStringKey(weekday.text), bundle: .module)
+                        }
+                    }
+                }, label: {
+                    EmptyView()
+                })
                     .listRowInsets(EdgeInsets())
         }
     }

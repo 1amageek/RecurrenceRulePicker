@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PickerGroup
 
 enum WeekNumberIndex: Int, CaseIterable {
     case first = 1
@@ -171,17 +172,26 @@ public struct RecurrenceRulePicker: View {
 
                 if case .interval = selection {
 
-                    MultiPicker(.init((1..<1000), selection: $recurrenceRule.interval, content: { element in
-                        Text("\(element)")
-                    }), .init(["unit"], selection: .constant("unit"), content: { element in
-                        Group {
-                            if recurrenceRule.interval < 2 {
-                                Text(LocalizedStringKey("\(recurrenceRule.frequency.text)"), bundle: .module)
-                            } else {
-                                Text(LocalizedStringKey("\(recurrenceRule.frequency.text)s"), bundle: .module)
+                    PickerGroup(content: {
+                        PickerComponent(selection: $recurrenceRule.interval) {
+                            ForEach(1..<1000) { element in
+                                Text("\(element)")
                             }
                         }
-                    }))
+                        PickerComponent {
+                            Group {
+                                if recurrenceRule.interval < 2 {
+                                    Text(LocalizedStringKey("\(recurrenceRule.frequency.text)"), bundle: .module)
+                                } else {
+                                    Text(LocalizedStringKey("\(recurrenceRule.frequency.text)s"), bundle: .module)
+                                }
+                            }
+                        }
+                    }, label: {
+                        EmptyView()
+                    })
+                        .listRowInsets(EdgeInsets())
+
                 }
             }
 

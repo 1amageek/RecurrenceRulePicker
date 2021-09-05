@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PickerGroup
 
 struct YearlyView: View {
     enum Mode: CaseIterable {
@@ -35,11 +36,20 @@ struct YearlyView: View {
             }
 
             if daysOfTheWeekToggle {
-                MultiPicker(.init(WeekNumberIndex.allCases, selection: $weekNumber, content: { weekNumber in
-                    Text(LocalizedStringKey(weekNumber.text), bundle: .module)
-                }), .init(WeekdayIndex.allCases, selection: $weekday, content: { weekday in
-                    Text(LocalizedStringKey(weekday.text), bundle: .module)
-                }))
+                PickerGroup(content: {
+                    PickerComponent(selection: $weekNumber) {
+                        ForEach(WeekNumberIndex.allCases, id: \.self) { weekNumber in
+                            Text(LocalizedStringKey(weekNumber.text), bundle: .module)
+                        }
+                    }
+                    PickerComponent(selection: $weekday) {
+                        ForEach(WeekdayIndex.allCases, id: \.self) { weekday in
+                            Text(LocalizedStringKey(weekday.text), bundle: .module)
+                        }
+                    }
+                }, label: {
+                    EmptyView()
+                })
                     .listRowInsets(EdgeInsets())
             }
         }
@@ -52,7 +62,9 @@ struct YearlyView_Previews: PreviewProvider {
             List {
                 YearlyView(monthsOfTheYear: .constant([]), weekNumber: .constant(.first), weekday: .constant(.day))
             }
+#if os(iOS)
             .listStyle(GroupedListStyle())
+#endif
         }
     }
 }

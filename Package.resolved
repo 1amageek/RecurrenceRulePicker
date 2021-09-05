@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PickerGroup",
+        "repositoryURL": "git@github.com:1amageek/PickerGroup.git",
+        "state": {
+          "branch": "main",
+          "revision": "4f29f8dd6b45a00686a7127dc5c3818840564999",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

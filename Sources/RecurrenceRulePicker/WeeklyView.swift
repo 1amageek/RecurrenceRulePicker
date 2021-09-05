@@ -41,7 +41,9 @@ struct WeeklyView_Previews: PreviewProvider {
             List {
                 WeeklyView(daysOfTheWeek: .constant([]))
             }
+#if os(iOS)
             .listStyle(GroupedListStyle())
+#endif
         }
     }
 }
