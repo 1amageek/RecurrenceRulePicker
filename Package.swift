@@ -12,11 +12,15 @@ let package = Package(
             name: "RecurrenceRulePicker",
             targets: ["RecurrenceRulePicker"]),
     ],
-    dependencies: [.package(name: "PickerGroup", url: "git@github.com:1amageek/PickerGroup.git", .branch("main"))],
+    dependencies: [
+        .package(name: "RecurrenceRule", url: "git@github.com:1amageek/RecurrenceRule.git", .branch("main")),
+        .package(name: "Calendar", url: "git@github.com:1amageek/Calendar.git", .branch("main")),
+        .package(name: "PickerGroup", url: "git@github.com:1amageek/PickerGroup.git", .branch("main"))
+    ],
     targets: [
         .target(
             name: "RecurrenceRulePicker",
-            dependencies: ["PickerGroup"]),
+            dependencies: ["RecurrenceRule", "Calendar", "PickerGroup"]),
         .testTarget(
             name: "RecurrenceRulePickerTests",
             dependencies: ["RecurrenceRulePicker"]),

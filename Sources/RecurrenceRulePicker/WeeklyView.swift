@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RecurrenceRule
 
 struct WeeklyView: View {
 

@@ -1,5 +1,10 @@
 "Frequency" = "繰り返しの単位";
 "Every" = "繰り返しの頻度";
+"End" = "繰り返しの終了";
+"Never" = "しない";
+"On Date" = "指定日";
+"Count" = "回数";
+"%@ count" = "%@ 回";
 
 // Unit
 "week" = "週";

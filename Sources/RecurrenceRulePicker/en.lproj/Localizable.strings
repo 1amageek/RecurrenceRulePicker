@@ -1,5 +1,10 @@
 "Frequency" = "Frequency";
 "Every" = "Every";
+"End" = "End Repeat";
+"Never" = "Never";
+"On Date" = "On Date";
+"Count" = "Count";
+"%@ count" = "%@ count";
 
 // Unit
 "week" = "week";

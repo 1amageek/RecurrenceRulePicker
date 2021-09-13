@@ -2,11 +2,29 @@
   "object": {
     "pins": [
       {
+        "package": "Calendar",
+        "repositoryURL": "git@github.com:1amageek/Calendar.git",
+        "state": {
+          "branch": "main",
+          "revision": "8d1f7c462213fb6276eb8b579f71dac9894b3849",
+          "version": null
+        }
+      },
+      {
         "package": "PickerGroup",
         "repositoryURL": "git@github.com:1amageek/PickerGroup.git",
         "state": {
           "branch": "main",
           "revision": "4f29f8dd6b45a00686a7127dc5c3818840564999",
+          "version": null
+        }
+      },
+      {
+        "package": "RecurrenceRule",
+        "repositoryURL": "git@github.com:1amageek/RecurrenceRule.git",
+        "state": {
+          "branch": "main",
+          "revision": "277b51b8a585b0478dccc9fdd311bb815cc3b86d",
           "version": null
         }
       }

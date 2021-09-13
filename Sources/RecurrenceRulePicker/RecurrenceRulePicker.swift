@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PickerGroup
+import RecurrenceRule
 
 enum WeekNumberIndex: Int, CaseIterable {
     case first = 1
@@ -114,6 +115,12 @@ public struct RecurrenceRulePicker: View {
 
     @State private var monthsOfTheYear: Set<RecurrenceRule.Month> = []
 
+    var dateFormatter: DateFormatter {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        return dateFormatter
+    }
+
     public var body: some View {
         List {
             Section {
@@ -201,6 +208,30 @@ public struct RecurrenceRulePicker: View {
                 case .monthly: MonthlyView(daysOfTheMonth: $daysOfTheMonth, weekNumber: $weekNumber, weekday: $weekday)
                 case .yearly: YearlyView(monthsOfTheYear: $monthsOfTheYear, weekNumber: $weekNumber, weekday: $weekday)
             }
+
+            Section {
+                NavigationLink {
+                    RecurrenceEndPicker(end: $recurrenceRule.recurrenceEnd)
+                } label: {
+                    HStack {
+                        Text("End", bundle: .module)
+                        Spacer()
+                        if let recurrenceEnd = recurrenceRule.recurrenceEnd {
+                            switch recurrenceEnd {
+                                case .endDate(let date):
+                                    Text(date, formatter: dateFormatter)
+                                case .occurrenceCount(let count):
+                                    Text(LocalizedStringKey("\(count) count"), bundle: .module)
+                            }
+                        } else {
+                            Text("Never", bundle: .module)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
         }
         .listStyle(GroupedListStyle())
         .onChange(of: recurrenceRule.frequency) { newValue in
@@ -259,6 +290,7 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ContentView()
+                .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }
