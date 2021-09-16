@@ -12,7 +12,7 @@ struct RecurrenceEndPicker: View {
 
     @Binding var end: RecurrenceRule.End?
 
-    @State var selection: Selection = .onDate
+    @State var selection: Selection = .never
 
     @State var date: Date = Date()
 
@@ -58,6 +58,40 @@ struct RecurrenceEndPicker: View {
         }
         .listStyle(GroupedListStyle())
         .navigationTitle(LocalizedStringKey("End"))
+        .onAppear {
+            if let end = end {
+                switch end {
+                    case .endDate(let date): self.date = date
+                    default: break
+                }
+            } else {
+                self.selection = .never
+            }
+        }
+        .onChange(of: selection, perform: { newValue in
+            switch selection {
+                case .never:
+                    self.end = nil
+                case .onDate:
+                    self.end = .endDate(self.date)
+            }
+        })
+        .onChange(of: date, perform: { newValue in
+            switch selection {
+                case .never:
+                    self.end = nil
+                case .onDate:
+                    self.end = .endDate(self.date)
+            }
+        })
+        .onDisappear {
+            switch selection {
+                case .never:
+                    self.end = nil
+                case .onDate:
+                    self.end = .endDate(self.date)
+            }
+        }
     }
 }
 
