@@ -5,6 +5,7 @@
 "On Date" = "指定日";
 "Count" = "回数";
 "%@ count" = "%@ 回";
+"End date" = "終了日";
 
 // Unit
 "week" = "週";

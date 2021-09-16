@@ -5,6 +5,7 @@
 "On Date" = "On Date";
 "Count" = "Count";
 "%@ count" = "%@ count";
+"End date" = "End date";
 
 // Unit
 "week" = "week";
