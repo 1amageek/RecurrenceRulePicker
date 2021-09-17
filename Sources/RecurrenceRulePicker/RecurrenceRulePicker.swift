@@ -126,14 +126,15 @@ public struct RecurrenceRulePicker: View {
             Section {
 
                 Button {
-                    withAnimation {
-                        if selection == .frequency {
-                            selection = nil
-                        } else {
-                            selection = .frequency
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            if selection == .frequency {
+                                selection = nil
+                            } else {
+                                selection = .frequency
+                            }
                         }
                     }
-
                 } label: {
                     HStack {
                         Text("Frequency", bundle: .module)
@@ -158,14 +159,15 @@ public struct RecurrenceRulePicker: View {
                 }
 
                 Button {
-                    withAnimation {
-                        if selection == .interval {
-                            selection = nil
-                        } else {
-                            selection = .interval
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            if selection == .interval {
+                                selection = nil
+                            } else {
+                                selection = .interval
+                            }
                         }
                     }
-
                 } label: {
                     HStack {
                         Text("Every", bundle: .module)
@@ -280,7 +282,7 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
 
     struct ContentView: View {
 
-        @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .daily, interval: 1, firstDayOfTheWeek: 0, daysOfTheWeek: nil, daysOfTheMonth: nil, daysOfTheYear: nil, monthsOfTheYear: nil)
+        @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .daily, interval: 1)
 
         var body: some View {
             RecurrenceRulePicker($recurrenceRule)

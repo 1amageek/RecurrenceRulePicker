@@ -14,14 +14,13 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "RecurrenceRule", url: "git@github.com:1amageek/RecurrenceRule.git", .branch("main")),
-        .package(name: "Calendar", url: "git@github.com:1amageek/Calendar.git", .branch("main")),
         .package(name: "PickerGroup", url: "git@github.com:1amageek/PickerGroup.git", .branch("main")),
         .package(name: "PageView", url: "git@github.com:1amageek/PageView.git", .branch("main"))
     ],
     targets: [
         .target(
             name: "RecurrenceRulePicker",
-            dependencies: ["RecurrenceRule", "Calendar", "PickerGroup", "PageView"]),
+            dependencies: ["RecurrenceRule", "PickerGroup", "PageView"]),
         .testTarget(
             name: "RecurrenceRulePickerTests",
             dependencies: ["RecurrenceRulePicker"]),

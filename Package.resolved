@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "Calendar",
-        "repositoryURL": "git@github.com:1amageek/Calendar.git",
-        "state": {
-          "branch": "main",
-          "revision": "8d1f7c462213fb6276eb8b579f71dac9894b3849",
-          "version": null
-        }
-      },
-      {
         "package": "PageView",
         "repositoryURL": "git@github.com:1amageek/PageView.git",
         "state": {
