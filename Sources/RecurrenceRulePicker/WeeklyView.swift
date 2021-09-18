@@ -21,6 +21,7 @@ struct WeeklyView: View {
                     } else {
                         daysOfTheWeek.insert(weekday)
                     }
+                    print(daysOfTheWeek)
                 } label: {
                     HStack {
                         Text(LocalizedStringKey(weekday.text), bundle: .module)
@@ -32,6 +33,9 @@ struct WeeklyView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
             }
+        }
+        .onAppear {
+            print(daysOfTheWeek)
         }
     }
 }

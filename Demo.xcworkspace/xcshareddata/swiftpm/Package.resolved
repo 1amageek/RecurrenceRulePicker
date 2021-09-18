@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PageView",
+        "repositoryURL": "git@github.com:1amageek/PageView.git",
+        "state": {
+          "branch": "main",
+          "revision": "04d4b6b71d1db2ecdea2981d2d3bdb41405aa122",
+          "version": null
+        }
+      },
+      {
+        "package": "PickerGroup",
+        "repositoryURL": "git@github.com:1amageek/PickerGroup.git",
+        "state": {
+          "branch": "main",
+          "revision": "4f29f8dd6b45a00686a7127dc5c3818840564999",
+          "version": null
+        }
+      },
+      {
+        "package": "RecurrenceRule",
+        "repositoryURL": "git@github.com:1amageek/RecurrenceRule.git",
+        "state": {
+          "branch": "main",
+          "revision": "05e41f83674a65e4c4161847d10c9d91bb28fdf3",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

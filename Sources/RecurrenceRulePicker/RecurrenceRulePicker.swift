@@ -78,27 +78,6 @@ public struct RecurrenceRulePicker: View {
 
     public init(_ recurrenceRule: Binding<RecurrenceRule>) {
         self._recurrenceRule = recurrenceRule
-
-        let rule = recurrenceRule.wrappedValue
-        switch rule.frequency {
-            case .daily: break
-            case .weekly:
-                let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
-                self.daysOfTheWeek = Set(daysOfTheWeek)
-            case .monthly:
-                if let daysOfTheWeek = rule.daysOfTheWeek?.map({ $0.dayOfTheWeek }) {
-                    self.daysOfTheWeek = Set(daysOfTheWeek)
-                } else {
-                    let daysOfTheMonth = rule.daysOfTheMonth ?? []
-                    self.daysOfTheMonth = Set(daysOfTheMonth)
-                }
-            case .yearly:
-                if let daysOfTheWeek = rule.daysOfTheWeek?.map({ $0.dayOfTheWeek }) {
-                    self.daysOfTheWeek = Set(daysOfTheWeek)
-                }
-                let monthsOfTheYear = rule.monthsOfTheYear ?? []
-                self.monthsOfTheYear = Set(monthsOfTheYear)
-        }
     }
 
     @State private var selection: Selection?
@@ -236,6 +215,15 @@ public struct RecurrenceRulePicker: View {
             }
         }
         .listStyle(GroupedListStyle())
+        .onAppear {
+            let rule = $recurrenceRule.wrappedValue
+            let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
+            let daysOfTheMonth = rule.daysOfTheMonth ?? []
+            let monthsOfTheYear = rule.monthsOfTheYear ?? []
+            self.daysOfTheWeek = Set(daysOfTheWeek)
+            self.daysOfTheMonth = Set(daysOfTheMonth)
+            self.monthsOfTheYear = Set(monthsOfTheYear)
+        }
         .onChange(of: recurrenceRule.frequency) { newValue in
             recurrenceRule.daysOfTheWeek = nil
             recurrenceRule.daysOfTheMonth = nil
@@ -292,7 +280,7 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ContentView()
-                .navigationViewStyle(StackNavigationViewStyle())
+                .navigationViewStyle(.columns)
         }
     }
 }
