@@ -56,7 +56,6 @@ struct RecurrenceEndPicker: View {
                 }
             }
         }
-        .listStyle(GroupedListStyle())
         .navigationTitle(LocalizedStringKey("End"))
         .onAppear {
             if let end = end {

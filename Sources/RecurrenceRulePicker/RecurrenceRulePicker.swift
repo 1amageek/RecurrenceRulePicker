@@ -214,7 +214,6 @@ public struct RecurrenceRulePicker: View {
                 .buttonStyle(PlainButtonStyle())
             }
         }
-        .listStyle(GroupedListStyle())
         .onAppear {
             let rule = $recurrenceRule.wrappedValue
             let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
