@@ -224,12 +224,26 @@ public struct RecurrenceRulePicker: View {
             self.daysOfTheMonth = Set(daysOfTheMonth)
             self.monthsOfTheYear = Set(monthsOfTheYear)
         }
-        .onChange(of: recurrenceRule.frequency) { newValue in
+        .onChange(of: recurrenceRule.frequency) { frequency in
+
             recurrenceRule.daysOfTheWeek = nil
             recurrenceRule.daysOfTheMonth = nil
             recurrenceRule.daysOfTheYear = nil
             recurrenceRule.weeksOfTheYear = nil
             recurrenceRule.monthsOfTheYear = nil
+
+            switch frequency {
+                case .daily: break
+                case .weekly:
+                    recurrenceRule.daysOfTheWeek = [.init(dayOfTheWeek: .tuesday, weekNumber: 0)]
+                case .monthly:
+                    let day: Int = Calendar.current.dateComponents(in: .current, from: Date()).day!
+                    recurrenceRule.daysOfTheMonth = [day]
+                case .yearly:
+                    let month: Int = Calendar.current.dateComponents(in: .current, from: Date()).month!
+                    recurrenceRule.monthsOfTheYear = [RecurrenceRule.Month(rawValue: month)!]
+            }
+
         }
         .onChange(of: daysOfTheWeek) { newValue in
             recurrenceRule.daysOfTheWeek = newValue.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: 0) }

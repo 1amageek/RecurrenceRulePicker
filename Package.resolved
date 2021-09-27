@@ -6,7 +6,7 @@
         "repositoryURL": "git@github.com:1amageek/PageView.git",
         "state": {
           "branch": "main",
-          "revision": "50b3f200581d9a4548ed3db8364a1ffe7ae4ff0c",
+          "revision": "2226b36aefc1d650af73a047a8f1c45d4bbc67d1",
           "version": null
         }
       },
@@ -24,7 +24,7 @@
         "repositoryURL": "git@github.com:1amageek/RecurrenceRule.git",
         "state": {
           "branch": "main",
-          "revision": "277b51b8a585b0478dccc9fdd311bb815cc3b86d",
+          "revision": "b0fdeb91bc4e4bce55a5628531f7fa35a642ae06",
           "version": null
         }
       }
