@@ -235,6 +235,7 @@ public struct RecurrenceRulePicker: View {
                 case .daily: break
                 case .weekly:
                     recurrenceRule.daysOfTheWeek = [.init(dayOfTheWeek: .tuesday, weekNumber: 0)]
+                    recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
                 case .monthly:
                     let day: Int = Calendar.current.dateComponents(in: .current, from: Date()).day!
                     recurrenceRule.daysOfTheMonth = [day]
@@ -255,15 +256,18 @@ public struct RecurrenceRulePicker: View {
             if recurrenceRule.frequency == .yearly {
                 recurrenceRule.monthsOfTheYear = Array(newValue)
             }
+            recurrenceRule.daysOfTheWeek = nil
         }
         .onChange(of: weekNumber) { newValue in
             recurrenceRule.daysOfTheWeek = weekday.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: newValue.rawValue) }
+            recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
             if recurrenceRule.frequency == .monthly {
                 recurrenceRule.daysOfTheMonth = nil
             }
         }
         .onChange(of: weekday) { newValue in
             recurrenceRule.daysOfTheWeek = newValue.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: weekNumber.rawValue) }
+            recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
             if recurrenceRule.frequency == .monthly {
                 recurrenceRule.daysOfTheMonth = nil
             }
