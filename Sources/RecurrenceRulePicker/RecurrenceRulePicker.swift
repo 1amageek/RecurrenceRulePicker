@@ -230,6 +230,7 @@ public struct RecurrenceRulePicker: View {
             recurrenceRule.daysOfTheYear = nil
             recurrenceRule.weeksOfTheYear = nil
             recurrenceRule.monthsOfTheYear = nil
+            recurrenceRule.firstDayOfTheWeek = 0
 
             switch frequency {
                 case .daily: break
