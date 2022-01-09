@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import PickerGroup
+@_exported import PickerGroup
 
 struct MonthlyView: View {
 

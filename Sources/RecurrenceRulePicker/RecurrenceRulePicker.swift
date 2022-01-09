@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import PickerGroup
-import RecurrenceRule
+@_exported import PickerGroup
+@_exported import RecurrenceRule
 
 enum WeekNumberIndex: Int, CaseIterable {
     case first = 1

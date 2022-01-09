@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import RecurrenceRule
+@_exported import RecurrenceRule
 
 struct MonthGrid: View {
 

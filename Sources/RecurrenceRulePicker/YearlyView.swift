@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import PickerGroup
-import RecurrenceRule
+@_exported import PickerGroup
+@_exported import RecurrenceRule
 
 struct YearlyView: View {
     enum Mode: CaseIterable {
