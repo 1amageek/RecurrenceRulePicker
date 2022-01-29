@@ -60,14 +60,14 @@
 "december" = "Dec";
 
 // Repeat
-"never" = "Never";
-"daily" = "Daily";
-"weekdays" = "Weekdays";
-"weekends" = "Weekends";
-"weekly" = "Weekly";
-"biweekly" = "Biweekly";
-"monthly" = "Monthly";
-"every3Months" = "Every 3 Months";
-"every6Months" = "Every 6 Months";
-"custom" = "Custom";
+"repeat.never" = "Never";
+"repeat.daily" = "Daily";
+"repeat.weekdays" = "Weekdays";
+"repeat.weekends" = "Weekends";
+"repeat.weekly" = "Weekly";
+"repeat.biweekly" = "Biweekly";
+"repeat.monthly" = "Monthly";
+"repeat.every3Months" = "Every 3 Months";
+"repeat.every6Months" = "Every 6 Months";
+"repeat.custom" = "Custom";
 "Event weil occur every %d %@s" = "Event weil occur every %d %@s";

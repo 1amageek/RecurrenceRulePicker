@@ -4,7 +4,7 @@
 "Never" = "しない";
 "On Date" = "指定日";
 "Count" = "回数";
-"%@ count" = "%@ 回";
+"%d count" = "%@ 回";
 "End date" = "終了日";
 
 // Unit
@@ -60,14 +60,14 @@
 "december" = "12月";
 
 // Repeat
-"never" = "しない";
-"daily" = "毎日";
-"weekdays" = "平日";
-"weekends" = "週末";
-"weekly" = "毎週";
-"biweekly" = "隔週";
-"monthly" = "毎月";
-"every3Months" = "3ヶ月ごと";
-"every6Months" = "6ヶ月ごと";
-"custom" = "カスタム";
+"repeat.never" = "しない";
+"repeat.daily" = "毎日";
+"repeat.weekdays" = "平日";
+"repeat.weekends" = "週末";
+"repeat.weekly" = "毎週";
+"repeat.biweekly" = "隔週";
+"repeat.monthly" = "毎月";
+"repeat.every3Months" = "3ヶ月ごと";
+"repeat.every6Months" = "6ヶ月ごと";
+"repeat.custom" = "カスタム";
 "Event weil occur every %d %@s" = "%d %@ごとにある繰り返します。";

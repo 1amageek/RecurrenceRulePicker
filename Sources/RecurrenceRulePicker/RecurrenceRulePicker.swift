@@ -5,6 +5,7 @@
 //  Created by nori on 2022/01/29.
 //
 
+import Foundation
 import SwiftUI
 import RecurrenceRule
 
@@ -112,24 +113,24 @@ public struct RecurrenceRulePicker: View {
             }
         }
 
-        public var rawValue: String {
+        public var rawValue: LocalizedStringKey {
             switch self {
-                case .never: return "never"
-                case .daily: return "daily"
-                case .weekdays: return "weekdays"
-                case .weekends: return "weekends"
-                case .weekly: return "weekly"
-                case .biweekly: return "biweekly"
-                case .monthly: return "monthly"
-                case .every3Months: return "every3Months"
-                case .every6Months: return "every6Months"
-                case .custom(_): return "custom"
+                case .never: return "repeat.never"
+                case .daily: return "repeat.daily"
+                case .weekdays: return "repeat.weekdays"
+                case .weekends: return "repeat.weekends"
+                case .weekly: return "repeat.weekly"
+                case .biweekly: return "repeat.biweekly"
+                case .monthly: return "repeat.monthly"
+                case .every3Months: return "repeat.every3Months"
+                case .every6Months: return "repeat.every6Months"
+                case .custom(_): return "repeat.custom"
             }
         }
 
-        public var text: String {
-            return NSLocalizedString(self.rawValue, bundle: .module, comment: "Recurrence")
-        }
+//        public var text: String {
+//            return NSLocalizedString(self.rawValue, bundle: .module, comment: "Recurrence")
+//        }
 
         public var rule: RecurrenceRule? {
             switch self {
@@ -172,7 +173,7 @@ public struct RecurrenceRulePicker: View {
                         self.repeatType = type
                     } label: {
                         HStack {
-                            Text(type.text)
+                            Text(type.rawValue, bundle: .module)
                             Spacer()
                             if repeatType == type {
                                 Image(systemName: "checkmark")
@@ -189,10 +190,10 @@ public struct RecurrenceRulePicker: View {
                 NavigationLink {
                     RecurrenceRuleCustomizer(recurrenceRuleBinding)
                         .navigationBarTitleDisplayMode(.inline)
-                        .navigationBarTitle(Text("custom", bundle: .module))
+                        .navigationBarTitle(Text("repeat.custom", bundle: .module))
                 } label: {
                     HStack {
-                        Text("Custom")
+                        Text("repeat.custom", bundle: .module)
                         Spacer()
                         switch repeatType {
                             case .custom(_):
@@ -233,9 +234,14 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
     }
 
     static var previews: some View {
-        NavigationView {
-            ContentView()
-                .navigationViewStyle(.columns)
+        Group {
+            ForEach(["en_US", "ja_JP"], id: \.self) { id in
+                NavigationView {
+                    ContentView()
+                        .navigationViewStyle(.columns)
+                }
+                .environment(\.locale, .init(identifier: id))
+            }
         }
     }
 }

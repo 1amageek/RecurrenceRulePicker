@@ -19,7 +19,9 @@ let package = Package(
     targets: [
         .target(
             name: "RecurrenceRulePicker",
-            dependencies: ["RecurrenceRule", "PickerGroup"]),
+            dependencies: ["RecurrenceRule", "PickerGroup"],
+            resources: [.process("Resources")]
+        ),
         .testTarget(
             name: "RecurrenceRulePickerTests",
             dependencies: ["RecurrenceRulePicker"]),
