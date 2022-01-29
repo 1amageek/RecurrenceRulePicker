@@ -45,7 +45,6 @@
 "weekday" = "Weekday";
 "weekend day" = "Weekend day";
 
-
 // Month
 "january" = "Jan";
 "february" = "Feb";
@@ -59,3 +58,15 @@
 "october" = "Oct";
 "november" = "Nov";
 "december" = "Dec";
+
+// Repeat
+"never" = "Never";
+"daily" = "Daily";
+"weekdays" = "Weekdays";
+"weekends" = "Weekends";
+"weekly" = "Weekly";
+"biweekly" = "Biweekly";
+"monthly" = "Monthly";
+"every3Months" = "Every 3 Months";
+"every6Months" = "Every 6 Months";
+"custom" = "Custom";
