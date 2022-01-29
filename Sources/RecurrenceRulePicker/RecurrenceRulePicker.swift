@@ -151,7 +151,7 @@ public struct RecurrenceRulePicker: View {
 
     @State var repeatType: RepeatType
 
-    public init(recurrenceRule: Binding<RecurrenceRule?>) {
+    public init(_ recurrenceRule: Binding<RecurrenceRule?>) {
         self._recurrenceRule = recurrenceRule
         self._repeatType = State(initialValue: RepeatType(recurrenceRule: recurrenceRule.wrappedValue))
     }
@@ -206,11 +206,9 @@ public struct RecurrenceRulePicker: View {
             } footer: {
                 switch repeatType {
                     case .custom(let rule):
-                        Text("Event weil occur every ")
-                        + Text(rule.interval, format: .number)
-                        + Text(" ")
-                        + Text(LocalizedStringKey(rule.frequency.text), bundle: .module)
-                        + Text("s")
+                        let localizedString = NSLocalizedString("Event weil occur every %d %@s", bundle: .module, comment: "Occur")
+                        let footer = String(format: localizedString, rule.interval, rule.frequency.text)
+                        Text(footer)
                     default: EmptyView()
                 }
             }
@@ -230,7 +228,7 @@ struct RecurrenceRulePicker_Previews: PreviewProvider {
         @State var recurrenceRule: RecurrenceRule? = RecurrenceRule(frequency: .daily, interval: 1)
 
         var body: some View {
-            RecurrenceRulePicker(recurrenceRule: $recurrenceRule)
+            RecurrenceRulePicker($recurrenceRule)
         }
     }
 

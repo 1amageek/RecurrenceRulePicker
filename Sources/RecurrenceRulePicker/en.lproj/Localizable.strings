@@ -70,3 +70,4 @@
 "every3Months" = "Every 3 Months";
 "every6Months" = "Every 6 Months";
 "custom" = "Custom";
+"Event weil occur every %d %@s" = "Event weil occur every %d %@s";

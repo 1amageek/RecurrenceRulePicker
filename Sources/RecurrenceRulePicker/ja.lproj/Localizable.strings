@@ -70,3 +70,4 @@
 "every3Months" = "3ヶ月ごと";
 "every6Months" = "6ヶ月ごと";
 "custom" = "カスタム";
+"Event weil occur every %d %@s" = "%d %@ごとにある繰り返します。";
