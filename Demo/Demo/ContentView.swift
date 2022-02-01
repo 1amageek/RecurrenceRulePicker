@@ -11,7 +11,7 @@ import RecurrenceRulePicker
 
 struct ContentView: View {
 
-    @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .daily, interval: 1)
+    @State var recurrenceRule: RecurrenceRule? = RecurrenceRule(frequency: .daily, interval: 1)
 
     var body: some View {
         NavigationView {

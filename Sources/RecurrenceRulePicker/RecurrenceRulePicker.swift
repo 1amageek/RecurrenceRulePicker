@@ -11,11 +11,15 @@ import RecurrenceRule
 
 extension RecurrenceRule {
 
-    public static var daily: RecurrenceRule {
-        RecurrenceRule(frequency: .daily, interval: 1)
+    public static func daily() -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .daily,
+            interval: 1,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue
+        )
     }
 
-    public static var weekdays: RecurrenceRule {
+    public static func weekdays() -> RecurrenceRule {
         RecurrenceRule(
             frequency: .weekly,
             interval: 1,
@@ -29,7 +33,7 @@ extension RecurrenceRule {
             ])
     }
 
-    public static var weekends: RecurrenceRule {
+    public static func weekends() -> RecurrenceRule {
         RecurrenceRule(
             frequency: .weekly,
             interval: 1,
@@ -40,24 +44,50 @@ extension RecurrenceRule {
             ])
     }
 
-    public static var weekly: RecurrenceRule {
-        RecurrenceRule(frequency: .weekly, interval: 1)
+    public static func weekly(daysOfTheWeek: [DayOfWeek]) -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .weekly,
+            interval: 1,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
+            daysOfTheWeek: daysOfTheWeek)
     }
 
-    public static var biweekly: RecurrenceRule {
-        RecurrenceRule(frequency: .weekly, interval: 2)
+    public static func biweekly(daysOfTheWeek: [DayOfWeek]) -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .weekly,
+            interval: 2,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
+            daysOfTheWeek: daysOfTheWeek)
     }
 
-    public static var monthly: RecurrenceRule {
-        RecurrenceRule(frequency: .monthly, interval: 1)
+    public static func monthly(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .monthly,
+            interval: 1,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
+            daysOfTheWeek: daysOfTheWeek,
+            daysOfTheMonth: daysOfTheMonth
+        )
     }
 
-    public static var every3Months: RecurrenceRule {
-        RecurrenceRule(frequency: .monthly, interval: 3)
+    public static func every3Months(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .monthly,
+            interval: 3,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
+            daysOfTheWeek: daysOfTheWeek,
+            daysOfTheMonth: daysOfTheMonth
+        )
     }
 
-    public static var every6Months: RecurrenceRule {
-        RecurrenceRule(frequency: .monthly, interval: 6)
+    public static func every6Months(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
+        RecurrenceRule(
+            frequency: .monthly,
+            interval: 6,
+            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
+            daysOfTheWeek: daysOfTheWeek,
+            daysOfTheMonth: daysOfTheMonth
+        )
     }
 }
 
@@ -90,7 +120,7 @@ public struct RecurrenceRulePicker: View {
         case every6Months
         case custom(RecurrenceRule)
 
-        public init(recurrenceRule: RecurrenceRule?) {
+        public init(recurrenceRule: RecurrenceRule?, occurrenceDate: Date) {
             if let recurrenceRule = recurrenceRule {
                 for type in [
                     RepeatType.daily,
@@ -102,7 +132,7 @@ public struct RecurrenceRulePicker: View {
                     RepeatType.every3Months,
                     RepeatType.every6Months
                 ] {
-                    if type.rule == recurrenceRule {
+                    if type.rule(occurrenceDate) == recurrenceRule {
                         self = type
                         return
                     }
@@ -128,21 +158,36 @@ public struct RecurrenceRulePicker: View {
             }
         }
 
-//        public var text: String {
-//            return NSLocalizedString(self.rawValue, bundle: .module, comment: "Recurrence")
-//        }
+        public var text: String {
+            return NSLocalizedString("\(self.rawValue)", bundle: .module, comment: "Recurrence")
+        }
 
-        public var rule: RecurrenceRule? {
+        public func rule(_ occurrenceDate: Date) -> RecurrenceRule? {
             switch self {
                 case .never: return nil
-                case .daily: return RecurrenceRule.daily
-                case .weekdays: return RecurrenceRule.weekdays
-                case .weekends: return RecurrenceRule.weekends
-                case .weekly: return RecurrenceRule.weekly
-                case .biweekly: return RecurrenceRule.biweekly
-                case .monthly: return RecurrenceRule.monthly
-                case .every3Months: return RecurrenceRule.every3Months
-                case .every6Months: return RecurrenceRule.every6Months
+                case .daily: return RecurrenceRule.daily()
+                case .weekdays: return RecurrenceRule.weekdays()
+                case .weekends: return RecurrenceRule.weekends()
+                case .weekly:
+                    let calendar = Calendar(identifier: .iso8601)
+                    let weekday = RecurrenceRule.Weekday(rawValue: calendar.component(.weekday, from: occurrenceDate))!
+                    return RecurrenceRule.weekly(daysOfTheWeek: [RecurrenceRule.DayOfWeek(dayOfTheWeek: weekday)])
+                case .biweekly:
+                    let calendar = Calendar(identifier: .iso8601)
+                    let weekday = RecurrenceRule.Weekday(rawValue: calendar.component(.weekday, from: occurrenceDate))!
+                    return RecurrenceRule.biweekly(daysOfTheWeek: [RecurrenceRule.DayOfWeek(dayOfTheWeek: weekday)])
+                case .monthly:
+                    let calendar = Calendar(identifier: .iso8601)
+                    let day = calendar.component(.day, from: occurrenceDate)
+                    return RecurrenceRule.monthly(daysOfTheWeek: nil, daysOfTheMonth: [day])
+                case .every3Months:
+                    let calendar = Calendar(identifier: .iso8601)
+                    let day = calendar.component(.day, from: occurrenceDate)
+                    return RecurrenceRule.every3Months(daysOfTheWeek: nil, daysOfTheMonth: [day])
+                case .every6Months:
+                    let calendar = Calendar(identifier: .iso8601)
+                    let day = calendar.component(.day, from: occurrenceDate)
+                    return RecurrenceRule.every6Months(daysOfTheWeek: nil, daysOfTheMonth: [day])
                 case .custom(let rule): return rule
             }
         }
@@ -152,16 +197,19 @@ public struct RecurrenceRulePicker: View {
 
     @State var repeatType: RepeatType
 
-    public init(_ recurrenceRule: Binding<RecurrenceRule?>) {
+    private var occurrenceDate: Date
+
+    public init(_ recurrenceRule: Binding<RecurrenceRule?>, occurrenceDate: Date = Date()) {
         self._recurrenceRule = recurrenceRule
-        self._repeatType = State(initialValue: RepeatType(recurrenceRule: recurrenceRule.wrappedValue))
+        self._repeatType = State(initialValue: RepeatType(recurrenceRule: recurrenceRule.wrappedValue, occurrenceDate: occurrenceDate))
+        self.occurrenceDate = occurrenceDate
     }
 
     var recurrenceRuleBinding: Binding<RecurrenceRule> {
         Binding {
-            self.repeatType.rule ?? .daily
+            self.repeatType.rule(occurrenceDate) ?? .daily()
         } set: { transaction in
-            self.repeatType = RepeatType(recurrenceRule: transaction)
+            self.repeatType = RepeatType(recurrenceRule: transaction, occurrenceDate: occurrenceDate)
         }
     }
 
@@ -216,7 +264,7 @@ public struct RecurrenceRulePicker: View {
 
         }
         .onChange(of: repeatType) { newValue in
-            self.recurrenceRule = newValue.rule
+            self.recurrenceRule = newValue.rule(occurrenceDate)
         }
     }
 }
