@@ -103,15 +103,12 @@ public struct RecurrenceRuleCustomizer: View {
     public var body: some View {
         List {
             Section {
-
                 Button {
-                    DispatchQueue.main.async {
-                        withAnimation {
-                            if selection == .frequency {
-                                selection = nil
-                            } else {
-                                selection = .frequency
-                            }
+                    withAnimation {
+                        if selection == .frequency {
+                            selection = nil
+                        } else {
+                            selection = .frequency
                         }
                     }
                 } label: {
@@ -123,7 +120,7 @@ public struct RecurrenceRuleCustomizer: View {
                     }
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
 
                 if case .frequency = selection {
                     Picker(selection: $recurrenceRule.frequency) {
@@ -138,13 +135,11 @@ public struct RecurrenceRuleCustomizer: View {
                 }
 
                 Button {
-                    DispatchQueue.main.async {
-                        withAnimation {
-                            if selection == .interval {
-                                selection = nil
-                            } else {
-                                selection = .interval
-                            }
+                    withAnimation {
+                        if selection == .interval {
+                            selection = nil
+                        } else {
+                            selection = .interval
                         }
                     }
                 } label: {
@@ -156,10 +151,9 @@ public struct RecurrenceRuleCustomizer: View {
                     }
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
 
                 if case .interval = selection {
-
                     PickerGroup(content: {
                         PickerComponent(selection: $recurrenceRule.interval) {
                             ForEach(1..<1000) { element in
@@ -178,8 +172,7 @@ public struct RecurrenceRuleCustomizer: View {
                     }, label: {
                         EmptyView()
                     })
-                        .listRowInsets(EdgeInsets())
-
+                    .listRowInsets(EdgeInsets())
                 }
             }
 
@@ -211,7 +204,7 @@ public struct RecurrenceRuleCustomizer: View {
                     }
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
             }
         }
         .onAppear {
