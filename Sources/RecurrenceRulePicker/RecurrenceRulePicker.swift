@@ -12,18 +12,16 @@ import RecurrenceRule
 extension RecurrenceRule {
 
     public static func daily() -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .daily,
-            interval: 1,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue
+            interval: 1
         )
     }
 
     public static func weekdays() -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .weekly,
             interval: 1,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: [
                 DayOfWeek(dayOfTheWeek: .monday),
                 DayOfWeek(dayOfTheWeek: .tuesday),
@@ -34,10 +32,9 @@ extension RecurrenceRule {
     }
 
     public static func weekends() -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .weekly,
             interval: 1,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: [
                 DayOfWeek(dayOfTheWeek: .sunday),
                 DayOfWeek(dayOfTheWeek: .thursday)
@@ -45,46 +42,41 @@ extension RecurrenceRule {
     }
 
     public static func weekly(daysOfTheWeek: [DayOfWeek]) -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .weekly,
             interval: 1,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: daysOfTheWeek)
     }
 
     public static func biweekly(daysOfTheWeek: [DayOfWeek]) -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .weekly,
             interval: 2,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: daysOfTheWeek)
     }
 
     public static func monthly(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .monthly,
             interval: 1,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: daysOfTheWeek,
             daysOfTheMonth: daysOfTheMonth
         )
     }
 
     public static func every3Months(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .monthly,
             interval: 3,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: daysOfTheWeek,
             daysOfTheMonth: daysOfTheMonth
         )
     }
 
     public static func every6Months(daysOfTheWeek: [DayOfWeek]?, daysOfTheMonth: [Int]?) -> RecurrenceRule {
-        RecurrenceRule(
+        RecurrenceRule.iso8601(
             frequency: .monthly,
             interval: 6,
-            firstDayOfTheWeek: RecurrenceRule.Weekday.monday.rawValue,
             daysOfTheWeek: daysOfTheWeek,
             daysOfTheMonth: daysOfTheMonth
         )
