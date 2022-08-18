@@ -13,8 +13,8 @@ let package = Package(
             targets: ["RecurrenceRulePicker"]),
     ],
     dependencies: [
-        .package(name: "RecurrenceRule", url: "git@github.com:1amageek/RecurrenceRule.git", .branch("main")),
-        .package(name: "PickerGroup", url: "git@github.com:1amageek/PickerGroup.git", .branch("main"))
+        .package(url: "git@github.com:1amageek/RecurrenceRule.git", .branch("main")),
+        .package(url: "git@github.com:1amageek/PickerGroup.git", .branch("main"))
     ],
     targets: [
         .target(

@@ -15,6 +15,18 @@ struct RecurrenceEndPicker: View {
     @State var selection: Selection = .never
 
     @State var date: Date = Date()
+    
+    init(end: Binding<RecurrenceRule.End?>) {
+        self._end = end
+        if let end = end.wrappedValue {
+            switch end {
+                case .endDate(let date):
+                    self._date = State(initialValue: date)
+                default:
+                    self._selection = State(initialValue: .never)
+            }
+        }
+    }
 
     var body: some View {
         List {
@@ -57,16 +69,6 @@ struct RecurrenceEndPicker: View {
             }
         }
         .navigationTitle(LocalizedStringKey("End"))
-        .onAppear {
-            if let end = end {
-                switch end {
-                    case .endDate(let date): self.date = date
-                    default: break
-                }
-            } else {
-                self.selection = .never
-            }
-        }
         .onChange(of: selection, perform: { newValue in
             switch selection {
                 case .never:
@@ -103,6 +105,14 @@ extension RecurrenceEndPicker {
 
 struct RecurrenceEndPicker_Previews: PreviewProvider {
     static var previews: some View {
-        RecurrenceEndPicker(end: .constant(nil))
+        Group {
+            ForEach(["en_US", "ja_JP"], id: \.self) { id in
+                NavigationView {
+                    RecurrenceEndPicker(end: .constant(nil))
+                        .navigationViewStyle(.columns)
+                }
+                .environment(\.locale, .init(identifier: id))
+            }
+        }
     }
 }

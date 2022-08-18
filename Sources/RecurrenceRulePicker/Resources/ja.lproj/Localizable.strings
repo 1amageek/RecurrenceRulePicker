@@ -19,6 +19,10 @@
 "weekly" = "毎週";
 "monthly" = "毎月";
 "yearly" = "毎年";
+"frequency.day" = "日";
+"frequency.week" = "週";
+"frequency.month" = "月";
+"frequency.year" = "年";
 
 // Day
 "Each" = "毎";
@@ -70,4 +74,4 @@
 "repeat.every3Months" = "3ヶ月ごと";
 "repeat.every6Months" = "6ヶ月ごと";
 "repeat.custom" = "カスタム";
-"Event weil occur every %d %@s" = "%d %@ごとにある繰り返します。";
+"Event weil occur every %@ %@s" = "%@ %@ごとに繰り返します。";

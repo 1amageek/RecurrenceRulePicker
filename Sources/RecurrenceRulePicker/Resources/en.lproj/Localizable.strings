@@ -18,7 +18,10 @@
 "weekly" = "Weekly";
 "monthly" = "Monthly";
 "yearly" = "Yearly";
-"sunday" = "Sunday";
+"frequency.day" = "day";
+"frequency.week" = "week";
+"frequency.month" = "month";
+"frequency.year" = "year";
 
 // Day
 "Each" = "Each";
@@ -70,4 +73,4 @@
 "repeat.every3Months" = "Every 3 Months";
 "repeat.every6Months" = "Every 6 Months";
 "repeat.custom" = "Custom";
-"Event weil occur every %d %@s" = "Event weil occur every %d %@s";
+"Event weil occur every %@ %@s" = "Event weil occur every %@ %@s";

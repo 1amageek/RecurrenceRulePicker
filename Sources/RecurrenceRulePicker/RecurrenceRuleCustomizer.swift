@@ -76,10 +76,6 @@ public struct RecurrenceRuleCustomizer: View {
 
     @Binding public var recurrenceRule: RecurrenceRule
 
-    public init(_ recurrenceRule: Binding<RecurrenceRule>) {
-        self._recurrenceRule = recurrenceRule
-    }
-
     @State private var selection: Selection?
 
     @State private var daysOfTheWeekToggle: Bool = false
@@ -98,6 +94,17 @@ public struct RecurrenceRuleCustomizer: View {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         return dateFormatter
+    }
+    
+    public init(_ recurrenceRule: Binding<RecurrenceRule>) {
+        self._recurrenceRule = recurrenceRule
+        let rule = recurrenceRule.wrappedValue
+        let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
+        let daysOfTheMonth = rule.daysOfTheMonth ?? []
+        let monthsOfTheYear = rule.monthsOfTheYear ?? []
+        self._daysOfTheWeek = State(initialValue: Set(daysOfTheWeek))
+        self._daysOfTheMonth = State(initialValue: Set(daysOfTheMonth))
+        self._monthsOfTheYear = State(initialValue: Set(monthsOfTheYear))
     }
 
     public var body: some View {
@@ -134,6 +141,7 @@ public struct RecurrenceRuleCustomizer: View {
                     .pickerStyle(WheelPickerStyle())
                 }
 
+                let frequency = Text(recurrenceRule.frequency.localizedStringKey, bundle: .module)
                 Button {
                     withAnimation {
                         if selection == .interval {
@@ -146,7 +154,7 @@ public struct RecurrenceRuleCustomizer: View {
                     HStack {
                         Text("Every", bundle: .module)
                         Spacer()
-                        Text(LocalizedStringKey("\(recurrenceRule.interval)\(recurrenceRule.frequency.text)"), bundle: .module)
+                        Text("\(recurrenceRule.interval)\(frequency)")
                             .foregroundColor(.secondary)
                     }
                     .contentShape(Rectangle())
@@ -161,13 +169,7 @@ public struct RecurrenceRuleCustomizer: View {
                             }
                         }
                         PickerComponent {
-                            Group {
-                                if recurrenceRule.interval < 2 {
-                                    Text(LocalizedStringKey("\(recurrenceRule.frequency.text)"), bundle: .module)
-                                } else {
-                                    Text(LocalizedStringKey("\(recurrenceRule.frequency.text)s"), bundle: .module)
-                                }
-                            }
+                            frequency
                         }
                     }, label: {
                         EmptyView()
@@ -206,15 +208,6 @@ public struct RecurrenceRuleCustomizer: View {
                 }
                 .buttonStyle(.plain)
             }
-        }
-        .onAppear {
-            let rule = $recurrenceRule.wrappedValue
-            let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
-            let daysOfTheMonth = rule.daysOfTheMonth ?? []
-            let monthsOfTheYear = rule.monthsOfTheYear ?? []
-            self.daysOfTheWeek = Set(daysOfTheWeek)
-            self.daysOfTheMonth = Set(daysOfTheMonth)
-            self.monthsOfTheYear = Set(monthsOfTheYear)
         }
         .onChange(of: recurrenceRule.frequency) { frequency in
 
@@ -289,9 +282,14 @@ struct RecurrenceRuleCustomizer_Previews: PreviewProvider {
     }
 
     static var previews: some View {
-        NavigationView {
-            ContentView()
-                .navigationViewStyle(.columns)
+        Group {
+            ForEach(["en_US", "ja_JP"], id: \.self) { id in
+                NavigationView {
+                    ContentView()
+                        .navigationViewStyle(.columns)
+                }
+                .environment(\.locale, .init(identifier: id))
+            }
         }
     }
 }

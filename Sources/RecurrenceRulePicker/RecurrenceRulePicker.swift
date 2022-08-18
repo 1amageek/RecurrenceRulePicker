@@ -135,7 +135,7 @@ public struct RecurrenceRulePicker: View {
             }
         }
 
-        public var rawValue: LocalizedStringKey {
+        public var localizedString: LocalizedStringKey {
             switch self {
                 case .never: return "repeat.never"
                 case .daily: return "repeat.daily"
@@ -148,10 +148,6 @@ public struct RecurrenceRulePicker: View {
                 case .every6Months: return "repeat.every6Months"
                 case .custom(_): return "repeat.custom"
             }
-        }
-
-        public var text: String {
-            return NSLocalizedString("\(self.rawValue)", bundle: .module, comment: "Recurrence")
         }
 
         public func rule(_ occurrenceDate: Date) -> RecurrenceRule? {
@@ -213,7 +209,7 @@ public struct RecurrenceRulePicker: View {
                         self.repeatType = type
                     } label: {
                         HStack {
-                            Text(type.rawValue, bundle: .module)
+                            Text(type.localizedString, bundle: .module)
                             Spacer()
                             if repeatType == type {
                                 Image(systemName: "checkmark")
@@ -247,9 +243,9 @@ public struct RecurrenceRulePicker: View {
             } footer: {
                 switch repeatType {
                     case .custom(let rule):
-                        let localizedString = NSLocalizedString("Event weil occur every %d %@s", bundle: .module, comment: "Occur")
-                        let footer = String(format: localizedString, rule.interval, rule.frequency.text)
-                        Text(footer)
+                        let frequency = Text(rule.frequency.localizedStringKey, bundle: .module)
+                        let key = LocalizedStringKey("Event weil occur every \("\(rule.interval)") \(frequency)s")
+                        Text(key, bundle: .module)
                     default: EmptyView()
                 }
             }
