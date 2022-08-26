@@ -122,7 +122,7 @@ public struct RecurrenceRuleCustomizer: View {
                     HStack {
                         Text("Frequency", bundle: .module)
                         Spacer()
-                        Text(LocalizedStringKey(recurrenceRule.frequency.rawValue), bundle: .module)
+                        Text(recurrenceRule.frequency.localizedString)
                             .foregroundColor(.secondary)
                     }
                     .contentShape(Rectangle())
@@ -141,7 +141,7 @@ public struct RecurrenceRuleCustomizer: View {
                     .pickerStyle(WheelPickerStyle())
                 }
 
-                let frequency = Text(recurrenceRule.frequency.localizedStringKey, bundle: .module)
+                let frequency = Text(recurrenceRule.frequency.localizedString)
                 Button {
                     withAnimation {
                         if selection == .interval {
