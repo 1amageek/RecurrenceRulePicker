@@ -19,7 +19,7 @@ extension RecurrenceRule.Frequency {
         return NSLocalizedString(self.localizedStringKey, tableName: nil, bundle: bundle, value: self.localizedStringKey, comment: self.localizedStringKey)
     }
     
-    public var localizedStringKey: String {
+    var localizedStringKey: String {
         switch self {
             case .daily: return "frequency.day"
             case .weekly: return "frequency.week"

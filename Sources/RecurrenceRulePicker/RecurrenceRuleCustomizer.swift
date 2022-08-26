@@ -16,8 +16,16 @@ enum WeekNumberIndex: Int, CaseIterable {
     case fourth = 4
     case fifth = 5
     case last = -1
-
-    var text: String {
+    
+    public var localizedString: String {
+        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).languageCode ?? "en"
+        guard let path = Bundle.module.path(forResource: languageCode, ofType: "lproj"), let bundle = Bundle(path: path) else {
+            fatalError()
+        }
+        return NSLocalizedString(self.localizedStringKey, tableName: nil, bundle: bundle, value: self.localizedStringKey, comment: self.localizedStringKey)
+    }
+    
+    var localizedStringKey: String {
         switch self {
             case .first: return "first"
             case .second: return "second"
@@ -41,7 +49,15 @@ enum WeekdayIndex: Int, CaseIterable {
     case weekday = 8
     case weekend = 9
 
-    var text: String {
+    public var localizedString: String {
+        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).languageCode ?? "en"
+        guard let path = Bundle.module.path(forResource: languageCode, ofType: "lproj"), let bundle = Bundle(path: path) else {
+            fatalError()
+        }
+        return NSLocalizedString(self.localizedStringKey, tableName: nil, bundle: bundle, value: self.localizedStringKey, comment: self.localizedStringKey)
+    }
+    
+    var localizedStringKey: String {
         switch self {
             case .sunday: return "sunday"
             case .monday: return "monday"

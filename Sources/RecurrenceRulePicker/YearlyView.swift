@@ -40,12 +40,12 @@ struct YearlyView: View {
                 PickerGroup(content: {
                     PickerComponent(selection: $weekNumber) {
                         ForEach(WeekNumberIndex.allCases, id: \.self) { weekNumber in
-                            Text(LocalizedStringKey(weekNumber.text), bundle: .module)
+                            Text(weekNumber.localizedString)
                         }
                     }
                     PickerComponent(selection: $weekday) {
                         ForEach(WeekdayIndex.allCases, id: \.self) { weekday in
-                            Text(LocalizedStringKey(weekday.text), bundle: .module)
+                            Text(weekday.localizedString)
                         }
                     }
                 }, label: {
