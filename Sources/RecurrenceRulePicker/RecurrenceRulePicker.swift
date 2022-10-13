@@ -200,6 +200,12 @@ public struct RecurrenceRulePicker: View {
         self._repeatType = State(initialValue: RepeatType(recurrenceRule: recurrenceRule.wrappedValue, occurrenceDate: occurrenceDate))
         self.occurrenceDate = occurrenceDate
     }
+    
+    public init(_ recurrenceRule: Binding<RecurrenceRule>, occurrenceDate: Date = Date()) {
+        self._recurrenceRule = Binding(recurrenceRule)
+        self._repeatType = State(initialValue: RepeatType(recurrenceRule: recurrenceRule.wrappedValue, occurrenceDate: occurrenceDate))
+        self.occurrenceDate = occurrenceDate
+    }
 
     var recurrenceRuleBinding: Binding<RecurrenceRule> {
         Binding {
