@@ -23,9 +23,10 @@ struct WeeklyView: View {
                     }
                 } label: {
                     HStack {
-                        Text(LocalizedStringKey(weekday.text), bundle: .module)
+                        Text(weekday.symbol)
                         Spacer()
                         Image(systemName: "checkmark")
+                            .foregroundColor(.accentColor)
                             .opacity(daysOfTheWeek.contains(weekday) ? 1 : 0)
                     }
                     .contentShape(Rectangle())
