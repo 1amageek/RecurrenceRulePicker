@@ -1,25 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "PickerGroup",
-        "repositoryURL": "git@github.com:1amageek/PickerGroup.git",
-        "state": {
-          "branch": "main",
-          "revision": "4f29f8dd6b45a00686a7127dc5c3818840564999",
-          "version": null
-        }
-      },
-      {
-        "package": "RecurrenceRule",
-        "repositoryURL": "git@github.com:1amageek/RecurrenceRule.git",
-        "state": {
-          "branch": "main",
-          "revision": "93a4db8614e9d16cc15c989da31516b5622e9eaf",
-          "version": null
-        }
+  "pins" : [
+    {
+      "identity" : "pickergroup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/1amageek/PickerGroup.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4f29f8dd6b45a00686a7127dc5c3818840564999"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "recurrencerule",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/1amageek/RecurrenceRule.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "58a7d43834cdba4c29293f6ee2367a308bac6da5"
+      }
+    }
+  ],
+  "version" : 2
 }
