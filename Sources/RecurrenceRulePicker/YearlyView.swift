@@ -7,8 +7,8 @@
 
 import SwiftUI
 @_exported import PickerGroup
-@_exported import RecurrenceRule
 
+@MainActor
 struct YearlyView: View {
     enum Mode: CaseIterable {
         case day
@@ -17,7 +17,7 @@ struct YearlyView: View {
 
     @State private var daysOfTheWeekToggle: Bool = false
 
-    @Binding var monthsOfTheYear: Set<RecurrenceRule.Month>
+    @Binding var months: Set<Calendar.RecurrenceRule.Month>
 
     @Binding var weekNumber: WeekNumberIndex
 
@@ -26,7 +26,7 @@ struct YearlyView: View {
     var body: some View {
 
         Section {
-            MonthGrid($monthsOfTheYear)
+            MonthGrid($months)
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
         }
@@ -61,7 +61,7 @@ struct YearlyView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             List {
-                YearlyView(monthsOfTheYear: .constant([]), weekNumber: .constant(.first), weekday: .constant(.day))
+                YearlyView(months: .constant([]), weekNumber: .constant(.first), weekday: .constant(.day))
             }
 #if os(iOS)
             .listStyle(GroupedListStyle())

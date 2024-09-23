@@ -8,6 +8,7 @@
 import SwiftUI
 @_exported import PickerGroup
 
+@MainActor
 struct MonthlyView: View {
 
     enum Mode: CaseIterable {
@@ -22,6 +23,17 @@ struct MonthlyView: View {
     @Binding var weekNumber: WeekNumberIndex
 
     @Binding var weekday: WeekdayIndex
+    
+    init(daysOfTheMonth: Binding<Set<Int>>, weekNumber: Binding<WeekNumberIndex>, weekday: Binding<WeekdayIndex>) {
+        self._daysOfTheMonth = daysOfTheMonth
+        self._weekNumber = weekNumber
+        self._weekday = weekday
+        if daysOfTheMonth.wrappedValue.isEmpty {
+            self._selection = State(initialValue: .weekday)
+        } else {
+            self._selection = State(initialValue: .day)
+        }
+    }
 
     var body: some View {
         Button {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 struct DayGrid: View {
 
     @Binding var selections: Set<Int>

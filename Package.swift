@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,20 +6,19 @@ import PackageDescription
 let package = Package(
     name: "RecurrenceRulePicker",
     defaultLocalization: "en",
-    platforms: [.iOS(.v15), .macOS(.v12)],
+    platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
         .library(
             name: "RecurrenceRulePicker",
             targets: ["RecurrenceRulePicker"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/1amageek/RecurrenceRule.git", branch: "main"),
         .package(url: "https://github.com/1amageek/PickerGroup.git", branch: "main")
     ],
     targets: [
         .target(
             name: "RecurrenceRulePicker",
-            dependencies: ["RecurrenceRule", "PickerGroup"],
+            dependencies: ["PickerGroup"],
             resources: [.process("Resources")]
         ),
         .testTarget(

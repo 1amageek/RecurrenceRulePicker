@@ -37,13 +37,13 @@
 "last" = "last";
 
 // Weekday
-"sunday" = "Sunday";
-"monday" = "Monday";
-"tuesday" = "Tuesday";
-"wednesday" = "Wednesday";
-"thursday" = "Thursday";
-"friday" = "Friday";
-"saturday" = "Saturday";
+"sun" = "Sunday";
+"mon" = "Monday";
+"tue" = "Tuesday";
+"wed" = "Wednesday";
+"thu" = "Thursday";
+"fri" = "Friday";
+"sat" = "Saturday";
 "day" = "Day";
 "weekday" = "Weekday";
 "weekend day" = "Weekend day";

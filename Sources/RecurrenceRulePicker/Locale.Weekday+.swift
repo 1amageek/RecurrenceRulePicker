@@ -1,14 +1,13 @@
 //
-//  RecurrenceRule+.swift
-//  
+//  Locale.Weekday+.swift
+//  RecurrenceRulePicker
 //
-//  Created by Norikazu Muramoto on 2022/08/18.
+//  Created by Norikazu Muramoto on 2024/09/24.
 //
 
 import Foundation
-import SwiftUI
 
-extension Calendar.RecurrenceRule.Frequency {
+extension Locale.Weekday {
     
     public var localizedString: String {
         let languageCode = Locale(identifier: Locale.preferredLanguages.first!).language.languageCode?.identifier ?? "en"
@@ -19,14 +18,6 @@ extension Calendar.RecurrenceRule.Frequency {
     }
     
     var localizedStringKey: String {
-        switch self {
-        case .daily: return "frequency.day"
-        case .weekly: return "frequency.week"
-        case .monthly: return "frequency.month"
-        case .yearly: return "frequency.year"
-        case .minutely: return "frequency.minutely"
-        case .hourly: return "frequency.hourly"
-        @unknown default: fatalError()
-        }
+        self.rawValue
     }
 }

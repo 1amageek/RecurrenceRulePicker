@@ -1,4 +1,5 @@
 {
+  "originHash" : "25b14a516d0b354c1d5bdb93438ead03288fa15d1338e57cbf634ce2af4d04e7",
   "pins" : [
     {
       "identity" : "pickergroup",
@@ -8,16 +9,7 @@
         "branch" : "main",
         "revision" : "4f29f8dd6b45a00686a7127dc5c3818840564999"
       }
-    },
-    {
-      "identity" : "recurrencerule",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/1amageek/RecurrenceRule.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "58a7d43834cdba4c29293f6ee2367a308bac6da5"
-      }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -6,12 +6,11 @@
 //
 
 import SwiftUI
-import RecurrenceRule
 import RecurrenceRulePicker
 
 struct ContentView: View {
 
-    @State var recurrenceRule: RecurrenceRule? = RecurrenceRule(frequency: .daily, interval: 1)
+    @State var recurrenceRule: Calendar.RecurrenceRule? = Calendar.RecurrenceRule(calendar: Calendar(identifier: .iso8601), frequency: .daily, interval: 1)
     
     @Environment(\.locale) var locale: Locale
  

@@ -7,7 +7,6 @@
 
 import SwiftUI
 @_exported import PickerGroup
-@_exported import RecurrenceRule
 
 enum WeekNumberIndex: Int, CaseIterable {
     case first = 1
@@ -18,7 +17,7 @@ enum WeekNumberIndex: Int, CaseIterable {
     case last = -1
     
     public var localizedString: String {
-        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).languageCode ?? "en"
+        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).language.languageCode?.identifier ?? "en"
         guard let path = Bundle.module.path(forResource: languageCode, ofType: "lproj"), let bundle = Bundle(path: path) else {
             fatalError()
         }
@@ -27,12 +26,12 @@ enum WeekNumberIndex: Int, CaseIterable {
     
     var localizedStringKey: String {
         switch self {
-            case .first: return "first"
-            case .second: return "second"
-            case .third: return "third"
-            case .fourth: return "fourth"
-            case .fifth: return "fifth"
-            case .last: return "last"
+        case .first: return "first"
+        case .second: return "second"
+        case .third: return "third"
+        case .fourth: return "fourth"
+        case .fifth: return "fifth"
+        case .last: return "last"
         }
     }
 }
@@ -48,9 +47,30 @@ enum WeekdayIndex: Int, CaseIterable {
     case day = 0
     case weekday = 8
     case weekend = 9
-
+    
+    public init?(weekday: Locale.Weekday) {
+        switch weekday {
+        case .sunday:
+            self = .sunday
+        case .monday:
+            self = .monday
+        case .tuesday:
+            self = .tuesday
+        case .wednesday:
+            self = .wednesday
+        case .thursday:
+            self = .thursday
+        case .friday:
+            self = .friday
+        case .saturday:
+            self = .saturday
+        @unknown default:
+            return nil
+        }
+    }
+    
     public var localizedString: String {
-        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).languageCode ?? "en"
+        let languageCode = Locale(identifier: Locale.preferredLanguages.first!).language.languageCode?.identifier ?? "en"
         guard let path = Bundle.module.path(forResource: languageCode, ofType: "lproj"), let bundle = Bundle(path: path) else {
             fatalError()
         }
@@ -59,70 +79,76 @@ enum WeekdayIndex: Int, CaseIterable {
     
     var localizedStringKey: String {
         switch self {
-            case .sunday: return "sunday"
-            case .monday: return "monday"
-            case .tuesday: return "tuesday"
-            case .wednesday: return "wednesday"
-            case .thursday: return "thursday"
-            case .friday: return "friday"
-            case .saturday: return "saturday"
-            case .day: return "day"
-            case .weekday: return "weekday"
-            case .weekend: return "weekend day"
+        case .sunday: return "sun"
+        case .monday: return "mon"
+        case .tuesday: return "tue"
+        case .wednesday: return "wed"
+        case .thursday: return "thu"
+        case .friday: return "fri"
+        case .saturday: return "sat"
+        case .day: return "day"
+        case .weekday: return "weekday"
+        case .weekend: return "weekend day"
         }
     }
-
-    var value: [RecurrenceRule.Weekday] {
+    
+    func value(_ index: Int) -> [Calendar.RecurrenceRule.Weekday] {
         switch self {
-            case .sunday: return [.sunday]
-            case .monday: return [.monday]
-            case .tuesday: return [.tuesday]
-            case .wednesday: return [.wednesday]
-            case .thursday: return [.thursday]
-            case .friday: return [.friday]
-            case .saturday: return [.saturday]
-            case .day: return [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
-            case .weekday: return [.monday, .tuesday, .wednesday, .thursday, .friday]
-            case .weekend: return [.saturday, .sunday]
+        case .sunday: return [.nth(index, .sunday)]
+        case .monday: return [.nth(index, .monday)]
+        case .tuesday: return [.nth(index, .tuesday)]
+        case .wednesday: return [.nth(index, .wednesday)]
+        case .thursday: return [.nth(index, .thursday)]
+        case .friday: return [.nth(index, .friday)]
+        case .saturday: return [.nth(index, .saturday)]
+        case .day: return [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday].map({ .nth(index, $0) })
+        case .weekday: return [.monday, .tuesday, .wednesday, .thursday, .friday].map({ .nth(index, $0) })
+        case .weekend: return [.saturday, .sunday].map({ .nth(index, $0) })
         }
     }
 }
 
 public struct RecurrenceRuleCustomizer: View {
-
-    @Binding public var recurrenceRule: RecurrenceRule
-
+    
+    @Binding public var recurrenceRule: Calendar.RecurrenceRule
+    
     @State private var selection: Selection?
-
+    
     @State private var daysOfTheWeekToggle: Bool = false
-
+    
     @State private var weekNumber: WeekNumberIndex = .first
-
+    
     @State private var weekday: WeekdayIndex = .sunday
-
+    
     @State private var daysOfTheMonth: Set<Int> = []
-
-    @State private var daysOfTheWeek: Set<RecurrenceRule.Weekday> = []
-
-    @State private var monthsOfTheYear: Set<RecurrenceRule.Month> = []
-
+    
+    @State private var weekdays: Set<Calendar.RecurrenceRule.Weekday> = []
+    
+    @State private var months: Set<Calendar.RecurrenceRule.Month> = []
+    
     var dateFormatter: DateFormatter {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         return dateFormatter
     }
     
-    public init(_ recurrenceRule: Binding<RecurrenceRule>) {
+    public init(_ recurrenceRule: Binding<Calendar.RecurrenceRule>) {
         self._recurrenceRule = recurrenceRule
         let rule = recurrenceRule.wrappedValue
-        let daysOfTheWeek = rule.daysOfTheWeek?.map { $0.dayOfTheWeek } ?? []
-        let daysOfTheMonth = rule.daysOfTheMonth ?? []
-        let monthsOfTheYear = rule.monthsOfTheYear ?? []
-        self._daysOfTheWeek = State(initialValue: Set(daysOfTheWeek))
+        let daysOfTheMonth = rule.daysOfTheMonth
+        let weekdays = rule.weekdays
+        let months = rule.months
+        
+        if case .nth(let index, let weekday) = rule.weekdays.first {
+            self._weekNumber = State(initialValue: WeekNumberIndex(rawValue: index)!)
+            self._weekday = State(initialValue: WeekdayIndex(weekday: weekday)!)
+        }
+        
         self._daysOfTheMonth = State(initialValue: Set(daysOfTheMonth))
-        self._monthsOfTheYear = State(initialValue: Set(monthsOfTheYear))
+        self._weekdays = State(initialValue: Set(weekdays))
+        self._months = State(initialValue: Set(months))
     }
-
+    
     public var body: some View {
         List {
             Section {
@@ -144,11 +170,16 @@ public struct RecurrenceRuleCustomizer: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-
+                
                 if case .frequency = selection {
                     Picker(selection: $recurrenceRule.frequency) {
-                        ForEach(RecurrenceRule.Frequency.allCases, id: \.self) { frequency in
-                            Text(LocalizedStringKey(frequency.rawValue), bundle: .module)
+                        ForEach([
+                            Calendar.RecurrenceRule.Frequency.yearly,
+                            Calendar.RecurrenceRule.Frequency.monthly,
+                            Calendar.RecurrenceRule.Frequency.weekly,
+                            Calendar.RecurrenceRule.Frequency.daily
+                        ], id: \.self) { frequency in
+                            Text(frequency.localizedString)
                                 .tag(frequency)
                         }
                     } label: {
@@ -156,7 +187,7 @@ public struct RecurrenceRuleCustomizer: View {
                     }
                     .pickerStyle(WheelPickerStyle())
                 }
-
+                
                 let frequency = Text(recurrenceRule.frequency.localizedString)
                 Button {
                     withAnimation {
@@ -176,7 +207,7 @@ public struct RecurrenceRuleCustomizer: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-
+                
                 if case .interval = selection {
                     PickerGroup(content: {
                         PickerComponent(selection: $recurrenceRule.interval) {
@@ -193,31 +224,27 @@ public struct RecurrenceRuleCustomizer: View {
                     .listRowInsets(EdgeInsets())
                 }
             }
-
+            
             switch recurrenceRule.frequency {
-                case .daily: EmptyView()
-                case .weekly: WeeklyView(daysOfTheWeek: $daysOfTheWeek)
-                case .monthly: MonthlyView(daysOfTheMonth: $daysOfTheMonth, weekNumber: $weekNumber, weekday: $weekday)
-                case .yearly: YearlyView(monthsOfTheYear: $monthsOfTheYear, weekNumber: $weekNumber, weekday: $weekday)
+            case .daily: EmptyView()
+            case .weekly: WeeklyView(weekdays: $weekdays)
+            case .monthly: MonthlyView(daysOfTheMonth: $daysOfTheMonth, weekNumber: $weekNumber, weekday: $weekday)
+            case .yearly: YearlyView(months: $months, weekNumber: $weekNumber, weekday: $weekday)
+            default: EmptyView()
             }
-
+            
             Section {
                 NavigationLink {
-                    RecurrenceEndPicker(end: $recurrenceRule.recurrenceEnd)
+                    RecurrenceEndPicker(end: $recurrenceRule.end)
                 } label: {
                     HStack {
                         Text("End", bundle: .module)
                         Spacer()
-                        if let recurrenceEnd = recurrenceRule.recurrenceEnd {
-                            switch recurrenceEnd {
-                                case .endDate(let date):
-                                    Text(date, formatter: dateFormatter)
-                                case .occurrenceCount(let count):
-                                    Text(LocalizedStringKey("\(count) count"), bundle: .module)
-                            }
-                        } else {
+                        if recurrenceRule.end == .never {
                             Text("Never", bundle: .module)
                                 .foregroundColor(.secondary)
+                        } else if let date = recurrenceRule.end.date {
+                            Text(date, format: .dateTime.year().month().day())
                         }
                     }
                     .contentShape(Rectangle())
@@ -225,61 +252,56 @@ public struct RecurrenceRuleCustomizer: View {
                 .buttonStyle(.plain)
             }
         }
-        .onChange(of: recurrenceRule.frequency) { frequency in
-
-            recurrenceRule.daysOfTheWeek = nil
-            recurrenceRule.daysOfTheMonth = nil
-            recurrenceRule.daysOfTheYear = nil
-            recurrenceRule.weeksOfTheYear = nil
-            recurrenceRule.monthsOfTheYear = nil
-            recurrenceRule.firstDayOfTheWeek = 0
-
+        .onChange(of: recurrenceRule.frequency) { _, frequency in
+            
+            recurrenceRule.weekdays = []
+            recurrenceRule.months = []
+            recurrenceRule.daysOfTheMonth = []
+            recurrenceRule.daysOfTheYear = []
+            
             switch frequency {
-                case .daily: break
-                case .weekly:
-                    recurrenceRule.daysOfTheWeek = [.init(dayOfTheWeek: .tuesday, weekNumber: 0)]
-                    recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
-                case .monthly:
-                    let day: Int = Calendar.current.dateComponents(in: .current, from: Date()).day!
-                    recurrenceRule.daysOfTheMonth = [day]
-                case .yearly:
-                    let month: Int = Calendar.current.dateComponents(in: .current, from: Date()).month!
-                    recurrenceRule.monthsOfTheYear = [RecurrenceRule.Month(rawValue: month)!]
+            case .weekly:
+                recurrenceRule.weekdays = [.every(.monday)]
+            case .monthly:
+                let day: Int = Calendar.current.dateComponents(in: .current, from: Date()).day!
+                recurrenceRule.daysOfTheMonth = [day]
+            case .yearly:
+                let month: Int = Calendar.current.dateComponents(in: .current, from: Date()).month!
+                recurrenceRule.months = [Calendar.RecurrenceRule.Month(month)]
+            default: break
             }
-
+            
         }
-        .onChange(of: daysOfTheWeek) { newValue in
-            recurrenceRule.daysOfTheWeek = newValue.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: 0) }
+        .onChange(of: weekdays) { _, newValue in
+            recurrenceRule.weekdays = Array(newValue)
         }
-        .onChange(of: daysOfTheMonth) { newValue in
+        .onChange(of: daysOfTheMonth) { _, newValue in
             recurrenceRule.daysOfTheMonth = Array(newValue)
-            recurrenceRule.daysOfTheWeek = nil
+            recurrenceRule.weekdays = []
         }
-        .onChange(of: monthsOfTheYear) { newValue in
+        .onChange(of: months) { _, newValue in
             if recurrenceRule.frequency == .yearly {
-                recurrenceRule.monthsOfTheYear = Array(newValue)
+                recurrenceRule.months = Array(newValue)
             }
-            recurrenceRule.daysOfTheWeek = nil
+            recurrenceRule.weekdays = []
         }
-        .onChange(of: weekNumber) { newValue in
-            recurrenceRule.daysOfTheWeek = weekday.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: newValue.rawValue) }
-            recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
+        .onChange(of: weekNumber) { _, newValue in
+            recurrenceRule.weekdays = weekday.value(newValue.rawValue)
             if recurrenceRule.frequency == .monthly {
-                recurrenceRule.daysOfTheMonth = nil
+                recurrenceRule.daysOfTheMonth = []
             }
         }
-        .onChange(of: weekday) { newValue in
-            recurrenceRule.daysOfTheWeek = newValue.value.map { RecurrenceRule.DayOfWeek(dayOfTheWeek: $0, weekNumber: weekNumber.rawValue) }
-            recurrenceRule.firstDayOfTheWeek = RecurrenceRule.Weekday.monday.rawValue
+        .onChange(of: weekday) { _, newValue in
+            recurrenceRule.weekdays = newValue.value(weekNumber.rawValue)
             if recurrenceRule.frequency == .monthly {
-                recurrenceRule.daysOfTheMonth = nil
+                recurrenceRule.daysOfTheMonth = []
             }
         }
     }
 }
 
 extension RecurrenceRuleCustomizer {
-
+    
     enum Selection {
         case frequency
         case interval
@@ -287,16 +309,16 @@ extension RecurrenceRuleCustomizer {
 }
 
 struct RecurrenceRuleCustomizer_Previews: PreviewProvider {
-
+    
     struct ContentView: View {
-
-        @State var recurrenceRule: RecurrenceRule = RecurrenceRule(frequency: .daily, interval: 1)
-
+        
+        @State var recurrenceRule: Calendar.RecurrenceRule = Calendar.RecurrenceRule(calendar: Calendar(identifier: .iso8601), frequency: .daily)
+        
         var body: some View {
             RecurrenceRuleCustomizer($recurrenceRule)
         }
     }
-
+    
     static var previews: some View {
         Group {
             ForEach(["en_US", "ja_JP"], id: \.self) { id in

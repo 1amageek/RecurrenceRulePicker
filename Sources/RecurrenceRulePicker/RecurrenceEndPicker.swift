@@ -6,28 +6,20 @@
 //
 
 import SwiftUI
-@_exported import RecurrenceRule
 
+@MainActor
 struct RecurrenceEndPicker: View {
-
-    @Binding var end: RecurrenceRule.End?
-
+    
+    @Binding var end: Calendar.RecurrenceRule.End
+    
     @State var selection: Selection = .never
-
+    
     @State var date: Date = Date()
     
-    init(end: Binding<RecurrenceRule.End?>) {
+    init(end: Binding<Calendar.RecurrenceRule.End>) {
         self._end = end
-        if let end = end.wrappedValue {
-            switch end {
-                case .endDate(let date):
-                    self._date = State(initialValue: date)
-                default:
-                    self._selection = State(initialValue: .never)
-            }
-        }
     }
-
+    
     var body: some View {
         List {
             Section {
@@ -45,7 +37,7 @@ struct RecurrenceEndPicker: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-
+                
                 Button {
                     withAnimation {
                         self.selection = .onDate
@@ -60,37 +52,37 @@ struct RecurrenceEndPicker: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
-
+                
                 switch selection {
-                    case .never: EmptyView()
-                    case .onDate:
-                        DatePicker(LocalizedStringKey("End date"), selection: $date, in: Date()..., displayedComponents: [.date])
+                case .never: EmptyView()
+                case .onDate:
+                    DatePicker(LocalizedStringKey("End date"), selection: $date, in: Date()..., displayedComponents: [.date])
                 }
             }
         }
         .navigationTitle(LocalizedStringKey("End"))
-        .onChange(of: selection, perform: { newValue in
+        .onChange(of: selection) { _, newValue in
             switch selection {
-                case .never:
-                    self.end = nil
-                case .onDate:
-                    self.end = .endDate(self.date)
+            case .never:
+                self.end = .never
+            case .onDate:
+                self.end = .afterDate(self.date)
             }
-        })
-        .onChange(of: date, perform: { newValue in
+        }
+        .onChange(of: date) { _, newValue in
             switch selection {
-                case .never:
-                    self.end = nil
-                case .onDate:
-                    self.end = .endDate(self.date)
+            case .never:
+                self.end = .never
+            case .onDate:
+                self.end = .afterDate(self.date)
             }
-        })
+        }
         .onDisappear {
             switch selection {
-                case .never:
-                    self.end = nil
-                case .onDate:
-                    self.end = .endDate(self.date)
+            case .never:
+                self.end = .never
+            case .onDate:
+                self.end = .afterDate(self.date)
             }
         }
     }
@@ -108,7 +100,7 @@ struct RecurrenceEndPicker_Previews: PreviewProvider {
         Group {
             ForEach(["en_US", "ja_JP"], id: \.self) { id in
                 NavigationView {
-                    RecurrenceEndPicker(end: .constant(nil))
+                    RecurrenceEndPicker(end: .constant(.never))
                         .navigationViewStyle(.columns)
                 }
                 .environment(\.locale, .init(identifier: id))
